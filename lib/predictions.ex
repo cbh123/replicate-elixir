@@ -25,11 +25,14 @@ defmodule Replicate.Predictions do
         webhook_completed \\ nil,
         webhook_event_filter \\ nil
       ) do
+    [_model | [version | _]] = String.split(version, ":")
+
     body =
-      Jason.encode!(%{
+      %{
         "version" => version,
         "input" => input |> Enum.into(%{})
-      })
+      }
+      |> Jason.encode!()
 
     Client.request(:post, "/v1/predictions", body)
   end
