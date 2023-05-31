@@ -4,7 +4,6 @@ defmodule Replicate.Client do
   """
   @host "https://api.replicate.com"
   @behaviour Replicate.Client.Behaviour
-  alias Replicate.Predictions.Prediction
 
   defp header() do
     [
@@ -13,25 +12,20 @@ defmodule Replicate.Client do
     ]
   end
 
-  def request(method, path, body \\ nil) do
-    case HTTPoison.request!(method, "#{@host}#{path}", body, header()) do
+  def request(method, path), do: request(method, path, [])
+
+  def request(method, path, body) do
+    case HTTPoison.request!(method, "#{@host}#{path}", body, header())
+         |> IO.inspect(label: "prediction") do
       %HTTPoison.Response{status_code: 200, body: body} ->
-        body = body |> Jason.decode!() |> string_to_atom()
-        prediction = struct(Prediction, body)
-        {:ok, prediction}
+        {:ok, body}
 
       %HTTPoison.Response{status_code: 201, body: body} ->
-        body = body |> Jason.decode!() |> string_to_atom()
-        prediction = struct(Prediction, body)
-        {:ok, prediction}
+        {:ok, body}
 
       %HTTPoison.Response{body: body} ->
         detail = Jason.decode!(body)["detail"]
         {:error, detail}
     end
-  end
-
-  defp string_to_atom(body) do
-    for {k, v} <- body, into: %{}, do: {String.to_atom(k), v}
   end
 end

@@ -8,11 +8,18 @@ defmodule Replicate do
 
   ## Examples
 
-  iex> Replicate.run("stability-ai/stable-diffusion:27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478", prompt: "a 19th century portrait of a wombat gentleman")
-  {:ok, %Prediction{status: "starting", input: %{"prompt" => "a 19th century portrait of a wombat gentleman"}}}
+  iex> {:ok, prediction} = Replicate.run("stability-ai/stable-diffusion:27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478", prompt: "a 19th century portrait of a wombat gentleman")
+  iex> prediction.status
+  "starting"
+  iex> prediction.version
+  "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478"
   """
 
   def run(version, input) do
+    Replicate.Predictions.create(version, input)
+  end
+
+  def async_run(version, input) do
     Replicate.Predictions.create(version, input)
   end
 end

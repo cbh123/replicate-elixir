@@ -3,5 +3,5 @@ defmodule Replicate.Client.Behaviour do
   Documentation for the Client Behaviour
   """
   @callback request(method :: atom(), path :: String.t(), body :: map()) ::
-              {:ok, Replicate.Predictions.Prediction} | {:error, String.t()}
+              {:ok, String.t()} | {:error, String.t()}
 end
