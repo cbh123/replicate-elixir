@@ -2,22 +2,12 @@ defmodule Replicate.Predictions do
   @moduledoc """
   Documentation for `Predictions`.
   """
-  defstruct [
-    :id,
-    :error,
-    :input,
-    :logs,
-    :output,
-    :status,
-    :version,
-    :started_at,
-    :created_at,
-    :completed_at
-  ]
 
   @doc """
   Create a new prediction.
   """
+  @replicate_client Application.compile_env!(:replicate, __MODULE__)[:replicate_client]
+
   def create(
         version,
         input,
@@ -34,6 +24,6 @@ defmodule Replicate.Predictions do
       }
       |> Jason.encode!()
 
-    Client.request(:post, "/v1/predictions", body)
+    @replicate_client.request(:post, "/v1/predictions", body)
   end
 end
