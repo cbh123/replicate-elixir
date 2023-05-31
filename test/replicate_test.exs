@@ -3,7 +3,7 @@ defmodule ReplicateTest do
   import Mox
   alias Replicate.Predictions.Prediction
   doctest Replicate
-  # doctest Replicate.Predictions, import: true
+  doctest Replicate.Predictions
 
   # Make sure mocks are verified when the test exits
   setup :verify_on_exit!
