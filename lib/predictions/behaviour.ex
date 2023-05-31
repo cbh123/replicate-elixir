@@ -7,6 +7,8 @@ defmodule Replicate.Predictions.Behaviour do
   @callback get(id :: String.t()) ::
               {:ok, Prediction.t()} | {:error, String.t()}
   @callback get!(id :: String.t()) :: Prediction.t()
+  @callback cancel(id :: String.t()) ::
+              {:ok, Prediction.t()} | {:error, String.t()}
   @callback create(
               model_version :: String.t(),
               input :: %{string: any},

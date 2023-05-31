@@ -6,8 +6,10 @@ defmodule Replicate.Client do
   @behaviour Replicate.Client.Behaviour
 
   defp header() do
+    token = Application.fetch_env!(:replicate, :replicate_api_token)
+
     [
-      Authorization: "Token #{Application.fetch_env!(:replicate, :replicate_api_token)}",
+      Authorization: "Token #{token}",
       "Content-Type": "application/json"
     ]
   end
@@ -15,8 +17,7 @@ defmodule Replicate.Client do
   def request(method, path), do: request(method, path, [])
 
   def request(method, path, body) do
-    case HTTPoison.request!(method, "#{@host}#{path}", body, header())
-         |> IO.inspect(label: "prediction") do
+    case HTTPoison.request!(method, "#{@host}#{path}", body, header()) do
       %HTTPoison.Response{status_code: 200, body: body} ->
         {:ok, body}
 

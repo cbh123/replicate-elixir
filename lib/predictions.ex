@@ -4,6 +4,7 @@ defmodule Replicate.Predictions do
   """
   @behaviour Replicate.Predictions.Behaviour
   @replicate_client Application.compile_env!(:replicate, __MODULE__)[:replicate_client]
+  @poll_interval Application.compile_env(:replicate, __MODULE__, 500)[:replicate_poll_interval]
   alias Replicate.Predictions.Prediction
 
   @doc """
@@ -39,6 +40,29 @@ defmodule Replicate.Predictions do
     end
   end
 
+  @doc """
+  Cancels a prediction by id.
+
+  ## Examples
+
+  iex> {:ok, prediction} = Replicate.Predictions.cancel("1234")
+  iex> prediction.status
+  "canceled"
+  """
+  def cancel(id) do
+    @replicate_client.request(:post, "/v1/predictions/#{id}/cancel")
+    |> parse_response()
+  end
+
+  @doc """
+  Creates a prediction. You can optionally provide a webhook to be notified when the prediction is completed.
+
+  ## Examples
+
+  iex> {:ok, prediction} = Replicate.Predictions.create("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
+  iex> prediction.status
+  "starting"
+  """
   def create(
         model_version,
         input,
@@ -69,6 +93,41 @@ defmodule Replicate.Predictions do
     @replicate_client.request(:post, "/v1/predictions", body)
     |> parse_response()
   end
+
+  @doc """
+  Waits for a prediction to complete.
+
+  ## Examples
+
+  iex> {:ok, prediction} = Replicate.run("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
+  iex> prediction.status
+  "starting"
+  iex> {:ok, prediction} = Replicate.Predictions.wait(prediction)
+  iex> prediction.status
+  "succeeded"
+  """
+  def wait(%Prediction{} = prediction), do: _wait({:ok, prediction})
+
+  defp _wait({:ok, %Prediction{id: id, status: status} = prediction}) do
+    case status do
+      "starting" ->
+        Process.sleep(@poll_interval)
+
+        get(id)
+        |> _wait()
+
+      "processing" ->
+        Process.sleep(@poll_interval)
+
+        get(id)
+        |> _wait()
+
+      _ ->
+        {:ok, prediction}
+    end
+  end
+
+  defp _wait({:error, message}), do: {:error, message}
 
   defp parse_response({:ok, json_body}) do
     body =
