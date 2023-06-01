@@ -13,38 +13,52 @@ defmodule Replicate.MockClient do
       "https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"
     ]
   }
+  @stub_version1 %{
+    id: "v1",
+    created_at: "2022-04-26T19:29:04.418669Z",
+    cog_version: "0.3.0",
+    openapi_schema: %{}
+  }
 
-  def request(:get, "/v1/models/cbh123/babadook-diffusion/versions") do
-    {:ok,
-     Jason.encode!(%{
-       "results" => [
-         %{
-           "id" => "v1",
-           "created_at" => "2022-04-26T19:29:04.418669Z",
-           "cog_version" => "0.3.0",
-           "openapi_schema" => %{}
-         },
-         %{
-           "id" => "v2",
-           "created_at" => "2022-03-21T13:01:04.418669Z",
-           "cog_version" => "0.3.0",
-           "openapi_schema" => %{}
-         }
-       ]
-     })}
+  @stub_version2 %{
+    id: "v2",
+    created_at: "2022-03-21T13:01:04.418669Z",
+    cog_version: "0.3.0",
+    openapi_schema: %{}
+  }
+
+  @stub_model %{
+    "url" => "https://replicate.com/replicate/hello-world",
+    "owner" => "replicate",
+    "name" => "hello-world",
+    "description" => "A tiny model that says hello",
+    "visibility" => "public",
+    "github_url" => "https://github.com/replicate/cog-examples",
+    "paper_url" => nil,
+    "license_url" => nil,
+    "run_count" => 12345,
+    "cover_image_url" => nil,
+    "latest_version" => @stub_version2
+  }
+
+  def request(:get, "/v1/models/replicate/hello-world/versions") do
+    {:ok, %{"results" => [@stub_version1, @stub_version2]} |> Jason.encode!()}
   end
 
-  def request(:get, path) do
-    id = String.split(path, "/") |> List.last()
-    get(id)
+  def request(:get, "/v1/models/replicate/hello-world") do
+    {:ok, @stub_version1 |> Jason.encode!()}
   end
+
+  def request(:get, "/v1/predictions/1234") do
+    {:ok, %{@stub_prediction | status: "succeeded"} |> Jason.encode!()}
+  end
+
+  def request(:get, "/v1/predictions/not_a_real_id"), do: {:error, "Not found"}
+  def request(:get, "/v1/models/cbh123/babadook-diffusion"), do: {:error, "Not found"}
+
+  def request(:get, _path), do: {:error, "Unexpected path"}
 
   def request(:post, path), do: request(:post, path, [])
-
-  def request(:get, path, _body) do
-    id = String.split(path, "/") |> List.last()
-    get(id)
-  end
 
   def request(:post, path, _body) do
     if Path.basename(path) == "cancel" do
@@ -55,14 +69,6 @@ defmodule Replicate.MockClient do
   end
 
   def request(:fail, _path, _body), do: {:error, "Failed"}
-
-  defp get("1234") do
-    {:ok, %{@stub_prediction | status: "succeeded"} |> Jason.encode!()}
-  end
-
-  defp get(_id) do
-    {:error, "Not found"}
-  end
 
   def wait({:ok, _prediction}) do
     {:ok, struct(Prediction, %{@stub_prediction | status: "succeeded"})}

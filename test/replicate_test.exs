@@ -46,4 +46,9 @@ defmodule ReplicateTest do
              "https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"
            ]
   end
+
+  test "get a model" do
+    Replicate.Models.get!("replicate/hello-world") |> IO.inspect(label: "")
+    Replicate.Models.get!("cbh123/babadook-diffusion") |> IO.inspect(label: "")
+  end
 end

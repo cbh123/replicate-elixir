@@ -18,6 +18,10 @@ defmodule Replicate.Models do
   """
   def get!(name) do
     [username, name] = String.split(name, "/")
+
+    @replicate_client.request(:get, "/v1/models/#{username}/#{name}")
+    |> IO.inspect(label: "response")
+
     struct(Model, %{username: username, name: name})
   end
 
@@ -26,7 +30,7 @@ defmodule Replicate.Models do
 
   ## Examples
 
-  iex> model = Replicate.Models.get!("cbh123/babadook-diffusion")
+  iex> model = Replicate.Models.get!("replicate/hello-world")
   iex> versions = Replicate.Models.list_versions(model)
   iex> %Replicate.Versions.Version{id: id, cog_version: cog_version} = List.first(versions)
   iex> id
