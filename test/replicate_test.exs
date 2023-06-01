@@ -48,7 +48,19 @@ defmodule ReplicateTest do
   end
 
   test "get a model" do
-    Replicate.Models.get!("replicate/hello-world") |> IO.inspect(label: "")
-    Replicate.Models.get!("cbh123/babadook-diffusion") |> IO.inspect(label: "")
+    %Replicate.Models.Model{owner: owner, name: name} =
+      Replicate.Models.get!("replicate/hello-world")
+
+    assert owner == "replicate"
+    assert name == "hello-world"
+  end
+
+  test "get a model and versions" do
+    model = Replicate.Models.get!("replicate/hello-world")
+    versions = Replicate.Models.list_versions(model)
+
+    first_version = Enum.at(versions, 0)
+    assert first_version.id == "v1"
+    assert first_version.cog_version == "0.3.0"
   end
 end

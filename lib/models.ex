@@ -7,22 +7,23 @@ defmodule Replicate.Models do
   alias Replicate.Models.Model
 
   @doc """
-  Gets a model from a username/modelname string.
-
-  TODO: make sure model actually exists
+  Gets a model from a owner/name string. Raises an error if the model doesn't exist.
 
   ## Examples
 
-  iex> Replicate.Models.get!("cbh123/babadook-diffusion")
-  %Model{username: "cbh123", name: "babadook-diffusion"}
+  iex> %Model{owner: owner, name: name} = Replicate.Models.get!("replicate/hello-world")
+  iex> owner
+  "replicate"
+  iex> name
+  "hello-world"
   """
   def get!(name) do
     [username, name] = String.split(name, "/")
 
-    @replicate_client.request(:get, "/v1/models/#{username}/#{name}")
-    |> IO.inspect(label: "response")
+    {:ok, result} = @replicate_client.request(:get, "/v1/models/#{username}/#{name}")
 
-    struct(Model, %{username: username, name: name})
+    model = Jason.decode!(result) |> string_to_atom()
+    struct(Model, model)
   end
 
   @doc """
@@ -38,8 +39,8 @@ defmodule Replicate.Models do
   iex> cog_version
   "0.3.0"
   """
-  def list_versions(%Model{username: username, name: name}) do
-    case @replicate_client.request(:get, "/v1/models/#{username}/#{name}/versions") do
+  def list_versions(%Model{owner: owner, name: name}) do
+    case @replicate_client.request(:get, "/v1/models/#{owner}/#{name}/versions") do
       {:ok, results} ->
         %{"results" => versions} = Jason.decode!(results)
 

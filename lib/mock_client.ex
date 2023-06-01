@@ -46,7 +46,7 @@ defmodule Replicate.MockClient do
   end
 
   def request(:get, "/v1/models/replicate/hello-world") do
-    {:ok, @stub_version1 |> Jason.encode!()}
+    {:ok, @stub_model |> Jason.encode!()}
   end
 
   def request(:get, "/v1/predictions/1234") do
@@ -56,7 +56,7 @@ defmodule Replicate.MockClient do
   def request(:get, "/v1/predictions/not_a_real_id"), do: {:error, "Not found"}
   def request(:get, "/v1/models/cbh123/babadook-diffusion"), do: {:error, "Not found"}
 
-  def request(:get, _path), do: {:error, "Unexpected path"}
+  def request(:get, path), do: {:error, "Unexpected path in the mock client: #{path}"}
 
   def request(:post, path), do: request(:post, path, [])
 
