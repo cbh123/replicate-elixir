@@ -4,25 +4,22 @@ defmodule Replicate do
   """
 
   @doc """
-  Run a prediction in the format owner/name:version.
+  Synchronously run a prediction in the format owner/name:version. Returns the output.
 
   ## Examples
 
-  iex> {:ok, prediction} = Replicate.run("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
-  iex> prediction.status
-  "starting"
-  iex> prediction.version
-  "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf"
+  iex> Replicate.run("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
+  ["https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"]
   """
   alias Replicate.Predictions
+  alias Replicate.Predictions.Prediction
 
   def run(version, input) do
-    case Predictions.create(version, input) do
-      {:ok, prediction} ->
-        Predictions.wait(prediction)
-
-      {:error, message} ->
-        {:error, message}
+    with {:ok, %Prediction{} = prediction} <- Predictions.create(version, input),
+         {:ok, %Prediction{output: output}} <- Predictions.wait(prediction) do
+      output
+    else
+      {:error, message} -> {:error, message}
     end
   end
 

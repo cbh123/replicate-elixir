@@ -3,8 +3,7 @@ defmodule Replicate.Predictions do
   Documentation for `Predictions`.
   """
   @behaviour Replicate.Predictions.Behaviour
-  @replicate_client Application.compile_env!(:replicate, __MODULE__)[:replicate_client]
-  @poll_interval Application.compile_env(:replicate, __MODULE__, 500)[:replicate_poll_interval]
+  @replicate_client Application.compile_env!(:replicate, :replicate_client)
   alias Replicate.Predictions.Prediction
 
   @doc """
@@ -14,10 +13,10 @@ defmodule Replicate.Predictions do
 
   iex> {:ok, prediction} = Replicate.Predictions.get("1234")
   iex> prediction.status
-  "starting"
+  "succeeded"
 
   iex> Replicate.Predictions.get("not_a_real_id")
-  {:error, "Prediction not found"}
+  {:error, "Not found"}
   """
   def get(id) do
     @replicate_client.request(:get, "/v1/predictions/#{id}")
@@ -30,8 +29,11 @@ defmodule Replicate.Predictions do
   ## Examples
 
   iex> prediction = Replicate.Predictions.get!("1234")
-  iex> prediction.status
-  "starting"
+  iex> prediction.id
+  "1234"
+
+  iex> Replicate.Predictions.get!("not_a_real_id")
+  ** (RuntimeError) Not found
   """
   def get!(id) do
     case get(id) do
@@ -41,13 +43,23 @@ defmodule Replicate.Predictions do
   end
 
   @doc """
-  Cancels a prediction by id.
+  Cancels a prediction by id. If a prediction is completed, it cannot be canceled.
 
   ## Examples
 
   iex> {:ok, prediction} = Replicate.Predictions.cancel("1234")
   iex> prediction.status
   "canceled"
+
+  iex> {:ok, prediction} = Replicate.Predictions.create("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
+  iex> prediction.status
+  "starting"
+  iex> {:ok, prediction} = Replicate.Predictions.wait(prediction)
+  iex> prediction.status
+  "succeeded"
+  # iex> {:ok, prediction} = Replicate.Predictions.cancel(prediction.id)
+  # iex> prediction.status
+  # "succeeded"
   """
   def cancel(id) do
     @replicate_client.request(:post, "/v1/predictions/#{id}/cancel")
@@ -99,35 +111,14 @@ defmodule Replicate.Predictions do
 
   ## Examples
 
-  iex> {:ok, prediction} = Replicate.run("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
+  iex> {:ok, prediction} = Replicate.Predictions.create("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
   iex> prediction.status
   "starting"
   iex> {:ok, prediction} = Replicate.Predictions.wait(prediction)
   iex> prediction.status
   "succeeded"
   """
-  def wait(%Prediction{} = prediction), do: _wait({:ok, prediction})
-
-  defp _wait({:ok, %Prediction{id: id, status: status} = prediction}) do
-    case status do
-      "starting" ->
-        Process.sleep(@poll_interval)
-
-        get(id)
-        |> _wait()
-
-      "processing" ->
-        Process.sleep(@poll_interval)
-
-        get(id)
-        |> _wait()
-
-      _ ->
-        {:ok, prediction}
-    end
-  end
-
-  defp _wait({:error, message}), do: {:error, message}
+  def wait(%Prediction{} = prediction), do: @replicate_client.wait({:ok, prediction})
 
   defp parse_response({:ok, json_body}) do
     body =

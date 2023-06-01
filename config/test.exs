@@ -1,5 +1,5 @@
 import Config
 
-config :replicate, Replicate.Predictions,
+config :replicate,
   replicate_client: Replicate.MockClient,
   replicate_poll_interval: 500

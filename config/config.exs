@@ -1,6 +1,6 @@
 import Config
 
-config :replicate, Replicate.Predictions,
+config :replicate,
   replicate_client: Replicate.Client,
   replicate_poll_interval: 500
 
