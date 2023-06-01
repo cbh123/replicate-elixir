@@ -14,6 +14,26 @@ defmodule Replicate.MockClient do
     ]
   }
 
+  def request(:get, "/v1/models/cbh123/babadook-diffusion/versions") do
+    {:ok,
+     Jason.encode!(%{
+       "results" => [
+         %{
+           "id" => "v1",
+           "created_at" => "2022-04-26T19:29:04.418669Z",
+           "cog_version" => "0.3.0",
+           "openapi_schema" => %{}
+         },
+         %{
+           "id" => "v2",
+           "created_at" => "2022-03-21T13:01:04.418669Z",
+           "cog_version" => "0.3.0",
+           "openapi_schema" => %{}
+         }
+       ]
+     })}
+  end
+
   def request(:get, path) do
     id = String.split(path, "/") |> List.last()
     get(id)
@@ -36,11 +56,11 @@ defmodule Replicate.MockClient do
 
   def request(:fail, _path, _body), do: {:error, "Failed"}
 
-  def get("1234") do
+  defp get("1234") do
     {:ok, %{@stub_prediction | status: "succeeded"} |> Jason.encode!()}
   end
 
-  def get(_id) do
+  defp get(_id) do
     {:error, "Not found"}
   end
 

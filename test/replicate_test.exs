@@ -2,8 +2,10 @@ defmodule ReplicateTest do
   use ExUnit.Case
   import Mox
   alias Replicate.Predictions.Prediction
+  alias Replicate.Models.Model
   doctest Replicate
   doctest Replicate.Predictions
+  doctest Replicate.Models
 
   # Make sure mocks are verified when the test exits
   setup :verify_on_exit!
