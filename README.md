@@ -85,7 +85,7 @@ We can take a look at the prediction:
   }
 ```
 
-Update the prediction:
+Get the latest status of the prediction with `Replicate.Predictions.get/1`:
 ```elixir
   iex> {:ok, prediction} = Replicate.Predictions.get(prediction.id)
   iex> prediction.logs |> String.split("\n")
@@ -111,7 +111,7 @@ Update the prediction:
     ""]
 ```
 
-Wait for completion:
+And wait for completion with `Replicate.Predictions.wait/1`:
 ```elixir
   iex> {:ok, prediction} = Replicate.Predictions.wait(prediction)
   iex> prediction.status
