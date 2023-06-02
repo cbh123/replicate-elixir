@@ -3,7 +3,7 @@ defmodule Replicate.Models do
   Documentation for `Models`.
   """
   @behaviour Replicate.Models.Behaviour
-  @replicate_client Application.compile_env!(:replicate, :replicate_client)
+  @replicate_client Application.compile_env(:replicate, :replicate_client, Replicate.Client)
   alias Replicate.Models.Model
 
   @doc """

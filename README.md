@@ -16,6 +16,15 @@ def deps do
 end
 ```
 
+Or by commit reference:
+```
+def deps do
+  [
+    {:replicate, git: "https://github.com/cbh123/replicate-elixir", ref: "bc30d08"}
+  ]
+end
+```
+
 ## Authenticate
 
 Before running any Python scripts that use the API, you need to set your Replicate API token in your environment.
