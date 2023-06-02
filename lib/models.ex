@@ -11,11 +11,13 @@ defmodule Replicate.Models do
 
   ## Examples
 
+  ```
   iex> %Model{owner: owner, name: name} = Replicate.Models.get!("replicate/hello-world")
   iex> owner
   "replicate"
   iex> name
   "hello-world"
+  ```
   """
   def get!(name) do
     [username, name] = String.split(name, "/")
@@ -31,6 +33,7 @@ defmodule Replicate.Models do
 
   ## Examples
 
+  ```
   iex> model = Replicate.Models.get!("replicate/hello-world")
   iex> versions = Replicate.Models.list_versions(model)
   iex> %Replicate.Versions.Version{id: id, cog_version: cog_version} = List.first(versions)
@@ -38,6 +41,7 @@ defmodule Replicate.Models do
   "v1"
   iex> cog_version
   "0.3.0"
+  ```
   """
   def list_versions(%Model{owner: owner, name: name}) do
     case @replicate_client.request(:get, "/v1/models/#{owner}/#{name}/versions") do

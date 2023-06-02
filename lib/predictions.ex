@@ -11,12 +11,14 @@ defmodule Replicate.Predictions do
 
   ## Examples
 
+  ```
   iex> {:ok, prediction} = Replicate.Predictions.get("1234")
   iex> prediction.status
   "succeeded"
 
   iex> Replicate.Predictions.get("not_a_real_id")
   {:error, "Not found"}
+  ```
   """
   def get(id) do
     @replicate_client.request(:get, "/v1/predictions/#{id}")
@@ -26,6 +28,7 @@ defmodule Replicate.Predictions do
   @doc """
   Gets a prediction by id and fails if it doesn't exist.
 
+  ```
   ## Examples
 
   iex> prediction = Replicate.Predictions.get!("1234")
@@ -34,6 +37,7 @@ defmodule Replicate.Predictions do
 
   iex> Replicate.Predictions.get!("not_a_real_id")
   ** (RuntimeError) Not found
+  ```
   """
   def get!(id) do
     case get(id) do
@@ -47,6 +51,7 @@ defmodule Replicate.Predictions do
 
   ## Examples
 
+  ```
   iex> {:ok, prediction} = Replicate.Predictions.cancel("1234")
   iex> prediction.status
   "canceled"
@@ -60,6 +65,7 @@ defmodule Replicate.Predictions do
   # iex> {:ok, prediction} = Replicate.Predictions.cancel(prediction.id)
   # iex> prediction.status
   # "succeeded"
+  ```
   """
   def cancel(id) do
     @replicate_client.request(:post, "/v1/predictions/#{id}/cancel")
@@ -71,9 +77,11 @@ defmodule Replicate.Predictions do
 
   ## Examples
 
+  ```
   iex> {:ok, prediction} = Replicate.Predictions.create("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
   iex> prediction.status
   "starting"
+  ```
   """
   def create(
         model_version,
@@ -111,12 +119,14 @@ defmodule Replicate.Predictions do
 
   ## Examples
 
+  ```
   iex> {:ok, prediction} = Replicate.Predictions.create("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
   iex> prediction.status
   "starting"
   iex> {:ok, prediction} = Replicate.Predictions.wait(prediction)
   iex> prediction.status
   "succeeded"
+  ```
   """
   def wait(%Prediction{} = prediction), do: @replicate_client.wait({:ok, prediction})
 

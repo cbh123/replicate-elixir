@@ -21,8 +21,7 @@ defmodule Replicate.Client do
   def request(method, path), do: request(method, path, [])
 
   def request(method, path, body) do
-    case HTTPoison.request!(method, "#{@host}#{path}", body, header())
-         |> IO.inspect(label: "are we live?") do
+    case HTTPoison.request!(method, "#{@host}#{path}", body, header()) do
       %HTTPoison.Response{status_code: 200, body: body} ->
         {:ok, body}
 
