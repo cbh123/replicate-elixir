@@ -60,12 +60,11 @@ Now you can use `Replicate` to do cool machine learny stuff.
 
 ## Run a model
 
-You can run a model:
+You can run a model synchronously:
 
 ```elixir
-iex> Replicate.run("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
-
-["https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"]
+iex> Replicate.run("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a watercolor of the babadook by Picasso")
+["https://replicate.delivery/pbxt/LgZ5BLmMWzqODp4rzSERXDNglStBTltHpj0533i9385qSgQE/out-0.png"]
 ```
 
 ## Run a model in the background
@@ -126,6 +125,8 @@ You can run a model and get a webhook when it completes, instead of waiting for 
 ```
 Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"}, "https://example.com/webhook", ["completed"])
 ```
+
+If you want to see a demo of how to use webhooks in production, check out 🔮 [Conjurer](https://github.com/cbh123/getting-started-with-replicate-elixir/blob/main/README.md).
 
 
 ## Cancel a prediction
@@ -202,6 +203,21 @@ iex> version.id
 iex> version.cog_version
 "0.6.0"
 ```
+
+## Load output files
+
+Output files are returned as HTTPS URLs. Here's one way to load files without any dependencies:
+
+```elixir
+iex> [url | _rest] = Replicate.run("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a watercolor of the babadook by Picasso")
+iex> url
+"https://replicate.delivery/pbxt/LgZ5BLmMWzqODp4rzSERXDNglStBTltHpj0533i9385qSgQE/out-0.png"
+iex> {:ok, resp} = :httpc.request(:get, {url, []}, [], [body_format: :binary])
+iex> {{_, 200, 'OK'}, _headers, body} = resp
+iex> File.write!("babadook_watercolor.jpg", body)
+```
+
+![Babadook Watercolor](babadook_watercolor.jpg "Babadook Watercolor")
 
 
 # replicate-elixir
