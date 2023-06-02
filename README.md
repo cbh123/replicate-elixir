@@ -35,7 +35,7 @@ Grab your token from [replicate.com/account](https://replicate.com/account) and 
 export REPLICATE_API_TOKEN=<your token>
 ```
 
-We recommend not adding the token directly to your source code, because you don't want to put your credentials in source control. If anyone used your API key, their usage would be charged to your account.
+> We recommend not adding the token directly to your source code, because you don't want to > put your credentials in source control. If anyone used your API key, their usage would be > charged to your account.
 
 Then, add the config to your `config.exs`:
 
