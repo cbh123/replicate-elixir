@@ -6,8 +6,6 @@ defmodule Replicate do
 
   alias Replicate.Predictions
   alias Replicate.Predictions.Prediction
-  alias Replicate.Models.Model
-  alias Replicate.Models.Version
 
   @doc """
   Synchronously run a prediction in the format owner/name:version. Returns the output.

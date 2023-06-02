@@ -57,12 +57,59 @@ iex> Replicate.run("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a2397
 
 ## Run a model in the background
 
-You can use `Replicate.Predictions.create/5`:
+You can start a model and run it in the background with `Replicate.Predictions.create/5`:
 ```elixir
-    iex> {:ok, prediction} = Replicate.Predictions.create("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", %{prompt: "a 19th century portrait of a wombat gentleman"})
-    iex> prediction.status
-    "starting"
+  iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
+  iex> version = Replicate.Models.get_version!(model, "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf")
+  iex> {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"})
+  iex> prediction.status
+  "starting"
+  iex> prediction
+  %Replicate.Predictions.Prediction{
+    id: "krdjxq6rw5bx3dopem52ohezca",
+    error: nil,
+    input: %{"prompt" => "a 19th century portrait of a wombat gentleman"},
+    logs: "",
+    output: nil,
+    status: "starting",
+    version: "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
+    started_at: nil,
+    created_at: "2023-06-02T20:43:55.720751299Z",
+    completed_at: nil
+  }
+  iex> {:ok, prediction} = Replicate.Predictions.get(prediction.id)
+  iex> prediction.logs |> String.split("\n")
+    ["Using seed: 54144", "input_shape: torch.Size([1, 77])",
+    "  0%|          | 0/50 [00:00<?, ?it/s]",
+    "  6%|▌         | 3/50 [00:00<00:02, 21.14it/s]",
+    " 12%|█▏        | 6/50 [00:00<00:02, 21.18it/s]",
+    " 18%|█▊        | 9/50 [00:00<00:01, 21.20it/s]",
+    " 24%|██▍       | 12/50 [00:00<00:01, 21.25it/s]",
+    " 30%|███       | 15/50 [00:00<00:01, 21.21it/s]",
+    " 36%|███▌      | 18/50 [00:00<00:01, 21.24it/s]",
+    " 42%|████▏     | 21/50 [00:00<00:01, 21.23it/s]",
+    " 48%|████▊     | 24/50 [00:01<00:01, 21.19it/s]",
+    " 54%|█████▍    | 27/50 [00:01<00:01, 21.16it/s]",
+    " 60%|██████    | 30/50 [00:01<00:00, 21.17it/s]",
+    " 66%|██████▌   | 33/50 [00:01<00:00, 21.15it/s]",
+    " 72%|███████▏  | 36/50 [00:01<00:00, 21.17it/s]",
+    " 78%|███████▊  | 39/50 [00:01<00:00, 21.16it/s]",
+    " 84%|████████▍ | 42/50 [00:01<00:00, 21.16it/s]",
+    " 90%|█████████ | 45/50 [00:02<00:00, 21.16it/s]",
+    " 96%|█████████▌| 48/50 [00:02<00:00, 20.99it/s]",
+    "100%|██████████| 50/50 [00:02<00:00, 21.14it/s]",
+    ""]
+  iex> {:ok, prediction} = Replicate.Predictions.wait(prediction)
+  iex> prediction.status
+  "succeeded"
+  iex> prediction.output
+  ["https://replicate.delivery/pbxt/xbT582euzFwqCiupR5PVyMUFemfgZHbPyAm5kenezBS3RDQIC/out-0.png"]
 ```
+
+
+  iex> {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"}, "https://example.com/webhook")
+  iex> prediction.status
+  "starting"
 
 Then, you can `Replicate.Predictions.get/1` or `Replicate.Predictions.get!/1` the prediction:
 
