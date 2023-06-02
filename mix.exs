@@ -15,8 +15,8 @@ defmodule Replicate.MixProject do
       name: "Replicate",
       source_url: "https://github.com/cbh123/replicate-elixir",
       docs: [
-        main: "README.md",
-        extras: ["README.md", "CHANGELOG.md"],
+        main: "Replicate",
+        extras: ["README.md"],
         logo: "logo.png"
       ]
     ]
