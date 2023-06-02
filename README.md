@@ -35,7 +35,7 @@ Want to jump right in to building your own apps with Elixir and Replicate? Check
 
 ## Authenticate
 
-Before running any Python scripts that use the API, you need to set your Replicate API token in your environment.
+After installation, you need to set your Replicate API token in your environment.
 
 Grab your token from [replicate.com/account](https://replicate.com/account) and set it as an environment variable:
 
@@ -43,7 +43,8 @@ Grab your token from [replicate.com/account](https://replicate.com/account) and 
 export REPLICATE_API_TOKEN=<your token>
 ```
 
-> We recommend not adding the token directly to your source code, because you don't want to > put your credentials in source control. If anyone used your API key, their usage would be > charged to your account.
+And run `source .env`.
+
 
 Then, add the config to your `config.exs`:
 
@@ -54,6 +55,8 @@ config :replicate,
 ```
 
 Now you can use `Replicate` to do cool machine learny stuff.
+
+> 🚨 We recommend not adding the token directly to your source code, because you don't want to put your credentials in source control. If anyone used your API key, their usage would be charged to your account.
 
 ## Run a model
 
