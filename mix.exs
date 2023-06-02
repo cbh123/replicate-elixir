@@ -14,6 +14,7 @@ defmodule Replicate.MixProject do
       deps: deps(),
       name: "Replicate",
       source_url: "https://github.com/cbh123/replicate-elixir",
+      homepage_url: "https://hexdocs.pm/replicate",
       docs: [
         main: "Replicate",
         extras: ["README.md", "CHANGELOG.md"],

@@ -1,6 +1,6 @@
 # Replicate
 
-The official Elixir client for <a href="https://replicate.com">Replicate</a>. It lets you run models from your Elixir code, and everything else you can do with Replicate's HTTP API.
+The official Elixir client for [Replicate](https://replicate.com). It lets you run models from your Elixir code, and everything else you can do with Replicate's HTTP API.
 
 
 ## Installation
