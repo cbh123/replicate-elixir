@@ -217,7 +217,4 @@ iex> {{_, 200, 'OK'}, _headers, body} = resp
 iex> File.write!("babadook_watercolor.jpg", body)
 ```
 
-![Babadook Watercolor](babadook_watercolor.jpg "Babadook Watercolor")
-
-
 # replicate-elixir
