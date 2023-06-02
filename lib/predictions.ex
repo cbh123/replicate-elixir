@@ -153,6 +153,45 @@ defmodule Replicate.Predictions do
   """
   def wait(%Prediction{} = prediction), do: @replicate_client.wait({:ok, prediction})
 
+  @doc """
+  Lists all the predictions you've run.
+
+  ## Examples
+
+  ```
+  iex> Replicate.Predictions.list()
+  [%Prediction{
+    id: "1234",
+    status: "starting",
+    input: %{"prompt" => "a 19th century portrait of a wombat gentleman"},
+    version: "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
+    output: ["https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"]
+    },
+   %Prediction{
+    id: "1235",
+    status: "starting",
+    input: %{"prompt" => "a 19th century portrait of a wombat gentleman"},
+    version: "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
+    output: ["https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"]}
+  ]
+  ```
+  """
+  def list() do
+    case @replicate_client.request(:get, "/v1/predictions") do
+      {:ok, results} ->
+        %{"results" => versions} = Jason.decode!(results)
+
+        versions
+        |> Enum.map(fn v ->
+          atom_map = string_to_atom(v)
+          struct(Replicate.Predictions.Prediction, atom_map)
+        end)
+
+      {:error, message} ->
+        raise message
+    end
+  end
+
   defp parse_response({:ok, json_body}) do
     body =
       json_body

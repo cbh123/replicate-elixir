@@ -13,6 +13,16 @@ defmodule Replicate.MockClient do
       "https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"
     ]
   }
+  @stub_prediction2 %{
+    id: "1235",
+    status: "starting",
+    input: %{"prompt" => "a 19th century portrait of a wombat gentleman"},
+    version: "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
+    output: [
+      "https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"
+    ]
+  }
+
   @stub_version1 %{
     id: "v1",
     created_at: "2022-04-26T19:29:04.418669Z",
@@ -40,6 +50,10 @@ defmodule Replicate.MockClient do
     "cover_image_url" => nil,
     "latest_version" => @stub_version2
   }
+
+  def request(:get, "/v1/predictions") do
+    {:ok, %{"results" => [@stub_prediction, @stub_prediction2]} |> Jason.encode!()}
+  end
 
   def request(:get, "/v1/models/replicate/hello-world/versions") do
     {:ok, %{"results" => [@stub_version1, @stub_version2]} |> Jason.encode!()}
