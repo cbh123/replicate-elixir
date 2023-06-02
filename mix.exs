@@ -4,7 +4,7 @@ defmodule Replicate.MixProject do
   def project do
     [
       app: :replicate,
-      version: "0.3.0",
+      version: "0.4.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -13,7 +13,12 @@ defmodule Replicate.MixProject do
       package: package(),
       deps: deps(),
       name: "Replicate",
-      source_url: "https://github.com/cbh123/replicate-elixir"
+      source_url: "https://github.com/cbh123/replicate-elixir",
+      docs: [
+        main: "README.md",
+        extras: ["README.md", "CHANGELOG.md"],
+        logo: "logo.png"
+      ]
     ]
   end
 
