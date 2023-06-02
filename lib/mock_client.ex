@@ -49,6 +49,18 @@ defmodule Replicate.MockClient do
     {:ok, @stub_model |> Jason.encode!()}
   end
 
+  def request(:get, "/v1/models/stability-ai/stable-diffusion/versions") do
+    {:ok, %{"results" => [@stub_version1, @stub_version2]} |> Jason.encode!()}
+  end
+
+  def request(:get, "/v1/models/replicate/hello-world/versions/v2") do
+    {:ok, @stub_version2 |> Jason.encode!()}
+  end
+
+  def request(:get, "/v1/models/stability-ai/stable-diffusion") do
+    {:ok, @stub_model |> Jason.encode!()}
+  end
+
   def request(:get, "/v1/predictions/1234") do
     {:ok, %{@stub_prediction | status: "succeeded"} |> Jason.encode!()}
   end

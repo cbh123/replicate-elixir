@@ -29,6 +29,68 @@ defmodule Replicate.Models do
   end
 
   @doc """
+  Gets a model from a owner/name string. Returns {:error, "Not found"} if the model doesn't exist.
+
+  ## Examples
+
+  ```
+  iex> {:ok, %Model{owner: owner, name: name}} = Replicate.Models.get("replicate/hello-world")
+  iex> owner
+  "replicate"
+  iex> name
+  "hello-world"
+  ```
+  """
+  def get(name) do
+    [username, name] = String.split(name, "/")
+
+    case @replicate_client.request(:get, "/v1/models/#{username}/#{name}") do
+      {:ok, result} ->
+        model = Jason.decode!(result) |> string_to_atom()
+        {:ok, struct(Model, model)}
+
+      {:error, message} ->
+        {:error, message}
+    end
+  end
+
+  @doc """
+  Gets a version of a model. Raises an error if the version doesn't exist.
+
+  ## Examples
+
+  ```
+  iex> model = Replicate.Models.get!("replicate/hello-world")
+  iex> version = Replicate.Models.get_version!(model, "v2")
+  iex> version.id
+  "v2"
+  ```
+  """
+  def get_version!(%Model{owner: owner, name: name}, version) do
+    {:ok, result} =
+      @replicate_client.request(:get, "/v1/models/#{owner}/#{name}/versions/#{version}")
+
+    version = Jason.decode!(result) |> string_to_atom()
+    struct(Replicate.Versions.Version, version)
+  end
+
+  @doc """
+  Gets the latest version of a model. Raises an error if the version doesn't exist.
+
+  ## Examples
+
+  ```
+  iex> model = Replicate.Models.get!("replicate/hello-world")
+  iex> version = Replicate.Models.get_latest_version!(model)
+  iex> version.id
+  "v2"
+  ```
+  """
+  def get_latest_version!(%Model{latest_version: %{"id" => id}} = model) do
+    model |> get_version!(id)
+  end
+
+  @doc """
   Returns a list of all versions for a model.
 
   ## Examples
