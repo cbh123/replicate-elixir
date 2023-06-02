@@ -136,7 +136,59 @@ You can cancel a running prediction by passing an id or `%Replicate.Predictions.
   "canceled"
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/replicate>.
+## List predictions
+
+You can list all the predictions you've run:
+
+```elixir
+iex> Replicate.Predictions.list()
+[%Prediction{
+id: "1234",
+status: "starting",
+input: %{"prompt" => "a 19th century portrait of a wombat gentleman"},
+version: "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
+output: ["https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"]
+},
+%Prediction{
+id: "1235",
+status: "starting",
+input: %{"prompt" => "a 19th century portrait of a wombat gentleman"},
+version: "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
+output: ["https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"]}
+]
+```
+
+## List versions of a model
+
+You can list all the versions of a model:
+
+```elixir
+  iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
+  iex> versions = Replicate.Models.list_versions(model)
+  iex> Replicate.Models.list_versions(model) |> Enum.map(& &1.id) |> Enum.slice(0..5)
+    ["db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
+    "328bd9692d29d6781034e3acab8cf3fcb122161e6f5afb896a4ca9fd57090577",
+    "f178fa7a1ae43a9a9af01b833b9d2ecf97b1bcb0acfd2dc5dd04895e042863f1",
+    "0827b64897df7b6e8c04625167bbb275b9db0f14ab09e2454b9824141963c966",
+    "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
+    "8abccf52e7cba9f6e82317253f4a3549082e966db5584e92c808ece132037776"]
+```
+
+## Get latest version of a
+
+*ELIXIR CLIENT EXCLUSIVE*
+
+Gets the latest version of a model. Raises an error if the version doesn't exist.
+
+## Examples
+
+```
+iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
+iex> version = Replicate.Models.get_latest_version!(model)
+iex> version.id
+"db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf"
+iex> version.cog_version
+"0.6.0"
+```
+
 # replicate-elixir
