@@ -5,22 +5,12 @@ The official Elixir client for [Replicate](https://replicate.com). It lets you r
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `replicate` to your list of dependencies in `mix.exs`:
+Install by adding `replicate` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:replicate, "~> 0.1.0"}
-  ]
-end
-```
-
-Or by commit reference:
-```
-def deps do
-  [
-    {:replicate, git: "https://github.com/cbh123/replicate-elixir", ref: "bc30d08"}
+    {:replicate, "~> 0.7.0"}
   ]
 end
 ```
