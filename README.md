@@ -47,7 +47,7 @@ config :replicate,
 
 ## Run a model
 
-Now you can use `Replicate`.
+Now you can use `Replicate` to do cool machine learny stuff.
 
 ```elixir
 iex> Replicate.run("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
@@ -106,32 +106,34 @@ You can start a model and run it in the background with `Replicate.Predictions.c
   ["https://replicate.delivery/pbxt/xbT582euzFwqCiupR5PVyMUFemfgZHbPyAm5kenezBS3RDQIC/out-0.png"]
 ```
 
+## Run a model in the background and get a webhook
 
-  iex> {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"}, "https://example.com/webhook")
+You can run a model and get a webhook when it completes, instead of waiting for it to finish:
+
+```
+Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"}, "https://example.com/webhook", ["completed"])
+```
+
+## Cancel a prediction
+
+You can cancel a running prediction by passing an id or `%Replicate.Predictions.Prediction{}` to `Replicate.Predictions.cancel/1`:
+
+```
+  iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
+  iex> version = Replicate.Models.get_version!(model, "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf")
+  iex> {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: "Watercolor painting of the Babadook"})
   iex> prediction.status
   "starting"
-
-Then, you can `Replicate.Predictions.get/1` or `Replicate.Predictions.get!/1` the prediction:
-
-```elixir
-  iex> {:ok, prediction} = Replicate.Predictions.get("1234")
+  iex> {:ok, prediction} = Replicate.Predictions.cancel(prediction.id)
   iex> prediction.status
-  "succeeded"
-```
+  "canceled"
 
-You can also use the handy `Replicate.Predictions.wait/1` which takes a prediction and doesn't return until success:
-
-```elixir
-  iex> {:ok, prediction} = Replicate.Predictions.wait(prediction)
+  iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
+  iex> version = Replicate.Models.get_version!(model, "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf")
+  iex> {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"})
+  iex> {:ok, prediction} = Replicate.Predictions.cancel(prediction)
   iex> prediction.status
-  "succeeded"
-```
-
-
-You can start a model and run it in the background:
-
-```elixir
-model = Replicate.Models.get("kvfrans/clipdraw")
+  "canceled"
 ```
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)

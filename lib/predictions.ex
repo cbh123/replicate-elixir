@@ -48,7 +48,7 @@ defmodule Replicate.Predictions do
   end
 
   @doc """
-  Cancels a prediction by id. If a prediction is completed, it cannot be canceled.
+  Cancels a prediction given an id or `%Prediction{}`.
 
   ## Examples
 
@@ -57,7 +57,16 @@ defmodule Replicate.Predictions do
   iex> prediction.status
   "canceled"
 
+  iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
+  iex> version = Replicate.Models.get_version!(model, "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf")
+  iex> {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"})
+  iex> {:ok, prediction} = Replicate.Predictions.cancel(prediction)
+  iex> prediction.status
+  "canceled"
+  ```
 
+  If a prediction is completed, it cannot be canceled.
+  ```
   iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
   iex> version = Replicate.Models.get_version!(model, "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf")
   iex> {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"})
@@ -71,7 +80,11 @@ defmodule Replicate.Predictions do
   # "succeeded"
   ```
   """
-  def cancel(id) do
+  def cancel(%Prediction{id: id}) do
+    cancel(id)
+  end
+
+  def cancel(id) when is_binary(id) do
     @replicate_client.request(:post, "/v1/predictions/#{id}/cancel")
     |> parse_response()
   end
