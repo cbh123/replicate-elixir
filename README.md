@@ -25,6 +25,14 @@ def deps do
 end
 ```
 
+## Demo
+Want to jump right in to building your own apps with Elixir and Replicate? Check out 🔮 [Conjurer](https://github.com/cbh123/getting-started-with-replicate-elixir/blob/main/README.md), a simple demo app we built with the Elixir client.
+
+<video width="400" controls>
+  <source src="https://user-images.githubusercontent.com/14149230/242976273-dba6b2a0-71f1-4838-bf97-6937e3211efe.mp4" type="video/mp4">
+</video>
+
+
 ## Authenticate
 
 Before running any Python scripts that use the API, you need to set your Replicate API token in your environment.
@@ -44,6 +52,7 @@ config :replicate,
   replicate_api_token: System.get_env("REPLICATE_API_TOKEN")
 
 ```
+
 
 ## Run a model
 
@@ -174,13 +183,11 @@ You can list all the versions of a model:
     "8abccf52e7cba9f6e82317253f4a3549082e966db5584e92c808ece132037776"]
 ```
 
-## Get latest version of a
+## Get latest version of a model
 
 *ELIXIR CLIENT EXCLUSIVE*
 
 Gets the latest version of a model. Raises an error if the version doesn't exist.
-
-## Examples
 
 ```
 iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
@@ -190,5 +197,6 @@ iex> version.id
 iex> version.cog_version
 "0.6.0"
 ```
+
 
 # replicate-elixir

@@ -4,7 +4,7 @@ defmodule Replicate.MixProject do
   def project do
     [
       app: :replicate,
-      version: "0.4.0",
+      version: "0.7.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -16,7 +16,7 @@ defmodule Replicate.MixProject do
       source_url: "https://github.com/cbh123/replicate-elixir",
       homepage_url: "https://hexdocs.pm/replicate/readme.html",
       docs: [
-        main: "https://hexdocs.pm/replicate/readme.html",
+        main: "readme",
         extras: ["README.md", "CHANGELOG.md"],
         logo: "logo.png"
       ]
