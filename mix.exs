@@ -17,7 +17,7 @@ defmodule Replicate.MixProject do
       homepage_url: "https://hexdocs.pm/replicate/readme.html",
       docs: [
         main: "readme",
-        extras: ["README.md", "CHANGELOG.md"],
+        extras: ["README.md", "cheatsheet.cheatmd", "CHANGELOG.md"],
         logo: "logo.png"
       ]
     ]

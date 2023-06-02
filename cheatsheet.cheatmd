@@ -1,63 +1,14 @@
-# Replicate
+# Cheatsheet
 
-The official Elixir client for [Replicate](https://replicate.com). It lets you run models from your Elixir code, and everything else you can do with Replicate's HTTP API.
+This document is a cheatsheet on how to use the [Replicate Elixir client](https://hexdocs.pm/replicate/readme.html).
 
-
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `replicate` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:replicate, "~> 0.1.0"}
-  ]
-end
-```
-
-Or by commit reference:
-```
-def deps do
-  [
-    {:replicate, git: "https://github.com/cbh123/replicate-elixir", ref: "bc30d08"}
-  ]
-end
-```
-
-## Demo
-Want to jump right in to building your own apps with Elixir and Replicate? Check out 🔮 [Conjurer](https://github.com/cbh123/getting-started-with-replicate-elixir/blob/main/README.md), a simple demo app we built with the Elixir client.
-
-<video width="400" controls>
-  <source src="https://user-images.githubusercontent.com/14149230/242976273-dba6b2a0-71f1-4838-bf97-6937e3211efe.mp4" type="video/mp4">
-</video>
+## Models
+{: .col-2}
 
 
-## Authenticate
+### Run a model
 
-Before running any Python scripts that use the API, you need to set your Replicate API token in your environment.
-
-Grab your token from [replicate.com/account](https://replicate.com/account) and set it as an environment variable:
-
-```
-export REPLICATE_API_TOKEN=<your token>
-```
-
-> We recommend not adding the token directly to your source code, because you don't want to > put your credentials in source control. If anyone used your API key, their usage would be > charged to your account.
-
-Then, add the config to your `config.exs`:
-
-```elixir
-config :replicate,
-  replicate_api_token: System.get_env("REPLICATE_API_TOKEN")
-
-```
-
-Now you can use `Replicate` to do cool machine learny stuff.
-
-## Run a model
-
-You can run a model:
+Run a model with:
 
 ```elixir
 iex> Replicate.run("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
@@ -65,7 +16,7 @@ iex> Replicate.run("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a2397
 ["https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"]
 ```
 
-## Run a model in the background
+### Run a model in the background
 
 You can start a model and run it in the background with `Replicate.Predictions.create/5`:
 ```elixir
@@ -116,7 +67,7 @@ You can start a model and run it in the background with `Replicate.Predictions.c
   ["https://replicate.delivery/pbxt/xbT582euzFwqCiupR5PVyMUFemfgZHbPyAm5kenezBS3RDQIC/out-0.png"]
 ```
 
-## Run a model in the background and get a webhook
+### Run a model in the background and get a webhook
 
 You can run a model and get a webhook when it completes, instead of waiting for it to finish:
 
@@ -124,8 +75,41 @@ You can run a model and get a webhook when it completes, instead of waiting for 
 Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"}, "https://example.com/webhook", ["completed"])
 ```
 
+### List versions of a model
 
-## Cancel a prediction
+You can list all the versions of a model:
+
+```elixir
+  iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
+  iex> versions = Replicate.Models.list_versions(model)
+  iex> Replicate.Models.list_versions(model) |> Enum.map(& &1.id) |> Enum.slice(0..5)
+    ["db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
+    "328bd9692d29d6781034e3acab8cf3fcb122161e6f5afb896a4ca9fd57090577",
+    "f178fa7a1ae43a9a9af01b833b9d2ecf97b1bcb0acfd2dc5dd04895e042863f1",
+    "0827b64897df7b6e8c04625167bbb275b9db0f14ab09e2454b9824141963c966",
+    "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
+    "8abccf52e7cba9f6e82317253f4a3549082e966db5584e92c808ece132037776"]
+```
+
+### Get latest version of a model
+
+*ELIXIR CLIENT EXCLUSIVE*
+
+Gets the latest version of a model. Raises an error if the version doesn't exist.
+
+```
+iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
+iex> version = Replicate.Models.get_latest_version!(model)
+iex> version.id
+"db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf"
+iex> version.cog_version
+"0.6.0"
+```
+
+## Predictions
+{: .col-2}
+
+### Cancel a prediction
 
 You can cancel a running prediction by passing an id or `%Replicate.Predictions.Prediction{}` to `Replicate.Predictions.cancel/1`:
 
@@ -147,7 +131,7 @@ You can cancel a running prediction by passing an id or `%Replicate.Predictions.
   "canceled"
 ```
 
-## List predictions
+### List predictions
 
 You can list all the predictions you've run:
 
@@ -168,37 +152,3 @@ version: "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
 output: ["https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"]}
 ]
 ```
-
-## List versions of a model
-
-You can list all the versions of a model:
-
-```elixir
-  iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
-  iex> versions = Replicate.Models.list_versions(model)
-  iex> Replicate.Models.list_versions(model) |> Enum.map(& &1.id) |> Enum.slice(0..5)
-    ["db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
-    "328bd9692d29d6781034e3acab8cf3fcb122161e6f5afb896a4ca9fd57090577",
-    "f178fa7a1ae43a9a9af01b833b9d2ecf97b1bcb0acfd2dc5dd04895e042863f1",
-    "0827b64897df7b6e8c04625167bbb275b9db0f14ab09e2454b9824141963c966",
-    "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
-    "8abccf52e7cba9f6e82317253f4a3549082e966db5584e92c808ece132037776"]
-```
-
-## Get latest version of a model
-
-*ELIXIR CLIENT EXCLUSIVE*
-
-Gets the latest version of a model. Raises an error if the version doesn't exist.
-
-```
-iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
-iex> version = Replicate.Models.get_latest_version!(model)
-iex> version.id
-"db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf"
-iex> version.cog_version
-"0.6.0"
-```
-
-
-# replicate-elixir
