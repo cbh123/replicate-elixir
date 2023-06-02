@@ -66,6 +66,10 @@ You can start a model and run it in the background with `Replicate.Predictions.c
   iex> {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"})
   iex> prediction.status
   "starting"
+```
+
+We can take a look at the prediction:
+```elixir
   iex> prediction
   %Replicate.Predictions.Prediction{
     id: "krdjxq6rw5bx3dopem52ohezca",
@@ -79,6 +83,10 @@ You can start a model and run it in the background with `Replicate.Predictions.c
     created_at: "2023-06-02T20:43:55.720751299Z",
     completed_at: nil
   }
+```
+
+Update the prediction:
+```elixir
   iex> {:ok, prediction} = Replicate.Predictions.get(prediction.id)
   iex> prediction.logs |> String.split("\n")
     ["Using seed: 54144", "input_shape: torch.Size([1, 77])",
@@ -101,6 +109,10 @@ You can start a model and run it in the background with `Replicate.Predictions.c
     " 96%|█████████▌| 48/50 [00:02<00:00, 20.99it/s]",
     "100%|██████████| 50/50 [00:02<00:00, 21.14it/s]",
     ""]
+```
+
+Wait for completion:
+```elixir
   iex> {:ok, prediction} = Replicate.Predictions.wait(prediction)
   iex> prediction.status
   "succeeded"
