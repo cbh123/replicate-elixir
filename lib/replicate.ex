@@ -6,6 +6,8 @@ defmodule Replicate do
 
   alias Replicate.Predictions
   alias Replicate.Predictions.Prediction
+  alias Replicate.Models.Model
+  alias Replicate.Models.Version
 
   @doc """
   Synchronously run a prediction in the format owner/name:version. Returns the output.
@@ -19,7 +21,13 @@ defmodule Replicate do
   ["https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"]
   ```
   """
-  def run(version, input) do
+  def run(model_version, input) do
+    %{"model" => model_string, "version" => version_string} =
+      Regex.named_captures(~r/^(?P<model>[^\/]+\/[^:]+):(?P<version>.+)$/, model_version)
+
+    model = Replicate.Models.get!(model_string)
+    version = Replicate.Models.get_version!(model, version_string)
+
     with {:ok, %Prediction{} = prediction} <- Predictions.create(version, input),
          {:ok, %Prediction{output: output}} <- Predictions.wait(prediction) do
       output

@@ -5,7 +5,7 @@ defmodule Replicate.Predictions do
   @behaviour Replicate.Predictions.Behaviour
   @replicate_client Application.compile_env(:replicate, :replicate_client, Replicate.Client)
   alias Replicate.Predictions.Prediction
-  alias Replicate.Models.Model
+  alias Replicate.Models.Version
 
   @doc """
   Gets a prediction by id.
@@ -57,7 +57,10 @@ defmodule Replicate.Predictions do
   iex> prediction.status
   "canceled"
 
-  iex> {:ok, prediction} = Replicate.Predictions.create("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
+
+  iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
+  iex> version = Replicate.Models.get_version!(model, "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf")
+  iex> {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"})
   iex> prediction.status
   "starting"
   iex> {:ok, prediction} = Replicate.Predictions.wait(prediction)
@@ -82,24 +85,22 @@ defmodule Replicate.Predictions do
 
   ```
   iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
-  iex> {:ok, prediction} = Replicate.Predictions.create("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", %{prompt: "a 19th century portrait of a wombat gentleman"})
+  iex> version = Replicate.Models.get_version!(model, "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf")
+  iex> {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"})
   iex> prediction.status
   "starting"
-  iex> {:ok, prediction} = Replicate.Predictions.create("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", %{prompt: "a 19th century portrait of a wombat gentleman"}, "https://example.com/webhook")
+  iex> {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"}, "https://example.com/webhook")
   iex> prediction.status
   "starting"
   ```
   """
   def create(
-        model_version,
+        %Version{id: id},
         input,
         webhook \\ nil,
         webhook_completed \\ nil,
         webhook_event_filter \\ nil
       ) do
-    %{"model" => _model, "version" => version} =
-      Regex.named_captures(~r/^(?P<model>[^\/]+\/[^:]+):(?P<version>.+)$/, model_version)
-
     webhook_parameters =
       %{
         "webhook" => webhook,
@@ -111,11 +112,10 @@ defmodule Replicate.Predictions do
 
     body =
       %{
-        "version" => version,
+        "version" => id,
         "input" => input |> Enum.into(%{})
       }
       |> Map.merge(webhook_parameters)
-      |> IO.inspect(label: "body")
       |> Jason.encode!()
 
     @replicate_client.request(:post, "/v1/predictions", body)
@@ -128,7 +128,9 @@ defmodule Replicate.Predictions do
   ## Examples
 
   ```
-  iex> {:ok, prediction} = Replicate.Predictions.create("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a 19th century portrait of a wombat gentleman")
+  iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
+  iex> version = Replicate.Models.get_version!(model, "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf")
+  iex> {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"})
   iex> prediction.status
   "starting"
   iex> {:ok, prediction} = Replicate.Predictions.wait(prediction)

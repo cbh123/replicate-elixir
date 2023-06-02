@@ -61,6 +61,20 @@ defmodule Replicate.MockClient do
     {:ok, @stub_model |> Jason.encode!()}
   end
 
+  def request(
+        :get,
+        "/v1/models/replicate/hello-world/versions/27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478"
+      ) do
+    {:ok, @stub_version1 |> Jason.encode!()}
+  end
+
+  def request(
+        :get,
+        "/v1/models/replicate/hello-world/versions/db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf"
+      ) do
+    {:ok, @stub_version2 |> Jason.encode!()}
+  end
+
   def request(:get, "/v1/predictions/1234") do
     {:ok, %{@stub_prediction | status: "succeeded"} |> Jason.encode!()}
   end

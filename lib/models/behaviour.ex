@@ -4,5 +4,8 @@ defmodule Replicate.Models.Behaviour do
   """
   @callback get!(name :: String.t()) :: Replicate.Models.Model.t()
   @callback get(name :: String.t()) :: {:ok, Replicate.Models.Model.t()} | {:error, String.t()}
-  @callback list_versions(Replicate.Models.Model.t()) :: [Replicate.Versions.Version.t()]
+  @callback get_version!(Replicate.Models.Model.t(), version :: String.t()) ::
+              Replicate.Models.Version.t()
+  @callback get_latest_version!(Replicate.Models.Model.t()) :: Replicate.Models.Version.t()
+  @callback list_versions(Replicate.Models.Model.t()) :: [Replicate.Models.Version.t()]
 end

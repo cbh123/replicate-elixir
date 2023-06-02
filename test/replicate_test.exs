@@ -11,11 +11,18 @@ defmodule ReplicateTest do
   setup :verify_on_exit!
 
   test "create prediction" do
-    {:ok, %Prediction{} = prediction} =
-      Replicate.Predictions.create(
-        "stability-ai/stable-diffusion:27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
-        prompt: "a 19th century portrait of a wombat gentleman"
+    model = Replicate.Models.get!("stability-ai/stable-diffusion")
+
+    version =
+      Replicate.Models.get_version!(
+        model,
+        "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf"
       )
+
+    {:ok, prediction} =
+      Replicate.Predictions.create(version, %{
+        prompt: "a 19th century portrait of a wombat gentleman"
+      })
 
     assert prediction.status == "starting"
     assert prediction.input == %{"prompt" => "a 19th century portrait of a wombat gentleman"}
@@ -25,11 +32,18 @@ defmodule ReplicateTest do
   end
 
   test "create and wait prediction" do
-    {:ok, %Prediction{} = prediction} =
-      Replicate.Predictions.create(
-        "stability-ai/stable-diffusion:27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
-        prompt: "a 19th century portrait of a wombat gentleman"
+    model = Replicate.Models.get!("stability-ai/stable-diffusion")
+
+    version =
+      Replicate.Models.get_version!(
+        model,
+        "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf"
       )
+
+    {:ok, prediction} =
+      Replicate.Predictions.create(version, %{
+        prompt: "a 19th century portrait of a wombat gentleman"
+      })
 
     {:ok, %Prediction{output: output}} = Replicate.Predictions.wait(prediction)
 

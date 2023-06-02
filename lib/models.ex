@@ -71,7 +71,7 @@ defmodule Replicate.Models do
       @replicate_client.request(:get, "/v1/models/#{owner}/#{name}/versions/#{version}")
 
     version = Jason.decode!(result) |> string_to_atom()
-    struct(Replicate.Versions.Version, version)
+    struct(Replicate.Models.Version, version)
   end
 
   @doc """
@@ -98,7 +98,7 @@ defmodule Replicate.Models do
   ```
   iex> model = Replicate.Models.get!("replicate/hello-world")
   iex> versions = Replicate.Models.list_versions(model)
-  iex> %Replicate.Versions.Version{id: id, cog_version: cog_version} = List.first(versions)
+  iex> %Replicate.Models.Version{id: id, cog_version: cog_version} = List.first(versions)
   iex> id
   "v1"
   iex> cog_version
@@ -113,7 +113,7 @@ defmodule Replicate.Models do
         versions
         |> Enum.map(fn v ->
           atom_map = string_to_atom(v)
-          struct(Replicate.Versions.Version, atom_map)
+          struct(Replicate.Models.Version, atom_map)
         end)
 
       {:error, message} ->

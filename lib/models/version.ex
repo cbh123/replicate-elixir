@@ -1,4 +1,4 @@
-defmodule Replicate.Versions.Version do
+defmodule Replicate.Models.Version do
   @moduledoc """
   `Version` struct.
   """

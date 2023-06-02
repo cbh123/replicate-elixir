@@ -10,7 +10,7 @@ defmodule Replicate.Predictions.Behaviour do
   @callback cancel(id :: String.t()) ::
               {:ok, Prediction.t()} | {:error, String.t()}
   @callback create(
-              model_version :: String.t(),
+              version :: Replicate.Models.Version.t(),
               input :: %{string: any},
               webhook :: list(String.t()),
               webhook_completed :: list(String.t()),
