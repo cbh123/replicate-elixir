@@ -4,7 +4,7 @@ defmodule Replicate.MixProject do
   def project do
     [
       app: :replicate,
-      version: "0.7.0",
+      version: "1.0.1",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -33,7 +33,7 @@ defmodule Replicate.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:httpoison, "~> 1.8"},
+      {:httpoison, "~> 2.0"},
       {:jason, "~> 1.2"},
       {:mox, "~> 1.0", only: :test},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false}

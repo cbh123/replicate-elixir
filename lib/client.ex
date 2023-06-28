@@ -2,7 +2,7 @@ defmodule Replicate.Client do
   @moduledoc """
   Documentation for the Client
   """
-  @host "https://api.replicate.com"
+  @host Application.compile_env(:replicate, :replicate_base_url, "https://api.replicate.com")
   @behaviour Replicate.Client.Behaviour
   @poll_interval Application.compile_env(:replicate, :replicate_poll_interval, 500)
 
