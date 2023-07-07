@@ -13,7 +13,7 @@ defmodule Replicate.MixProject do
       package: package(),
       deps: deps(),
       name: "Replicate",
-      source_url: "https://github.com/cbh123/replicate-elixir",
+      source_url: "https://github.com/replicate/replicate-elixir",
       homepage_url: "https://hexdocs.pm/replicate/readme.html",
       docs: [
         main: "readme",
@@ -49,7 +49,7 @@ defmodule Replicate.MixProject do
       # These are the default files included in the package
       files: ~w(lib .formatter.exs mix.exs README* CHANGELOG*),
       licenses: ["Apache-2.0"],
-      links: %{"GitHub" => "https://github.com/cbh123/replicate-elixir"}
+      links: %{"GitHub" => "https://github.com/replicate/replicate-elixir"}
     ]
   end
 end
