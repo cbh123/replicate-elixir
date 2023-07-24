@@ -4,7 +4,11 @@ defmodule Replicate.MixProject do
   def project do
     [
       app: :replicate,
+<<<<<<< HEAD
       version: "1.0.3",
+=======
+      version: "1.0.2",
+>>>>>>> 144d8919277e051052b83887283f09fcf230de1b
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
