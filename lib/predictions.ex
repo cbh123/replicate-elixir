@@ -165,15 +165,23 @@ defmodule Replicate.Predictions do
     status: "starting",
     input: %{"prompt" => "a 19th century portrait of a wombat gentleman"},
     version: "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
-    output: ["https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"]
-    },
+    output: ["https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"],
+    urls: %{
+      "get" => "https://api.replicate.com/v1/predictions/1234",
+      "cancel" => "https://api.replicate.com/v1/predictions/1234/cancel",
+    }
+   },
    %Prediction{
     id: "1235",
     status: "starting",
     input: %{"prompt" => "a 19th century portrait of a wombat gentleman"},
     version: "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
-    output: ["https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"]}
-  ]
+    output: ["https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"],
+    urls: %{
+      "get" => "https://api.replicate.com/v1/predictions/1235",
+      "cancel" => "https://api.replicate.com/v1/predictions/1235/cancel"
+    }
+  }]
   ```
   """
   def list() do
