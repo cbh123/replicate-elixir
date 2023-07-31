@@ -112,13 +112,15 @@ defmodule Replicate.Predictions do
         input,
         webhook \\ nil,
         webhook_completed \\ nil,
-        webhook_event_filter \\ nil
+        webhook_event_filter \\ nil,
+        stream \\ nil
       ) do
     webhook_parameters =
       %{
         "webhook" => webhook,
         "webhook_completed" => webhook_completed,
-        "webhook_event_filter" => webhook_event_filter
+        "webhook_event_filter" => webhook_event_filter,
+        "stream" => stream
       }
       |> Enum.filter(fn {_key, value} -> !is_nil(value) end)
       |> Enum.into(%{})
