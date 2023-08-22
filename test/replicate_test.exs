@@ -24,11 +24,13 @@ defmodule ReplicateTest do
         prompt: "a 19th century portrait of a wombat gentleman"
       })
 
-    assert prediction.status == "starting"
-    assert prediction.input == %{"prompt" => "a 19th century portrait of a wombat gentleman"}
-
     assert prediction.version ==
              "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478"
+
+    assert prediction.status == "starting"
+    assert prediction.input == %{"prompt" => "a 19th century portrait of a wombat gentleman"}
+    assert prediction.urls["get"] == "https://api.replicate.com/v1/predictions/1234"
+    assert prediction.urls["cancel"] == "https://api.replicate.com/v1/predictions/1234/cancel"
   end
 
   test "create and wait prediction" do

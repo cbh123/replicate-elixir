@@ -11,7 +11,11 @@ defmodule Replicate.MockClient do
     version: "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
     output: [
       "https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"
-    ]
+    ],
+    urls: %{
+      "get" => "https://api.replicate.com/v1/predictions/1234",
+      "cancel" => "https://api.replicate.com/v1/predictions/1234/cancel",
+    }
   }
   @stub_prediction2 %{
     id: "1235",
@@ -20,7 +24,11 @@ defmodule Replicate.MockClient do
     version: "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
     output: [
       "https://replicate.com/api/models/stability-ai/stable-diffusion/files/50fcac81-865d-499e-81ac-49de0cb79264/out-0.png"
-    ]
+    ],
+    urls: %{
+      "get" => "https://api.replicate.com/v1/predictions/1235",
+      "cancel" => "https://api.replicate.com/v1/predictions/1235/cancel",
+    }
   }
 
   @stub_version1 %{
