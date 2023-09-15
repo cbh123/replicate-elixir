@@ -34,7 +34,7 @@ defmodule Replicate.Deployments do
 
   ```
   iex> {:ok, deployment} = Replicate.Deployments.get("test/model")
-  iex> {:ok, prediction} = Replicate.Deployments.create_prediction(deployment, version, %{prompt: "a 19th century portrait of a wombat gentleman"})
+  iex> {:ok, prediction} = Replicate.Deployments.create_prediction(deployment, %{prompt: "a 19th century portrait of a wombat gentleman"})
   iex> prediction.status
   "starting"
   ```

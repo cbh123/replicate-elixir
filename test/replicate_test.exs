@@ -86,7 +86,7 @@ defmodule ReplicateTest do
     {:ok, deployment} = Replicate.Deployments.get("test/model")
 
     {:ok, prediction} =
-      Replicate.Deployments.create_prediction(deployment, version, %{
+      Replicate.Deployments.create_prediction(deployment, %{
         prompt: "a 19th century portrait of a wombat gentleman"
       })
 
