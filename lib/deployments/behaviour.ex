@@ -4,12 +4,9 @@ defmodule Replicate.Deployments.Behaviour do
   """
   alias Replicate.Deployments.Deployment
 
-  @callback get(String.t(), String.t()) :: {:ok, Deployment.t()} | {:error, String.t()}
-  @callback list_predictions(Deployment.t()) ::
-              {:ok, [Replicate.Predictions.Prediction.t()]} | {:error, String.t()}
+  @callback get(String.t()) :: {:ok, Deployment.t()} | {:error, String.t()}
   @callback create_prediction(
               Deployment.t(),
-              version :: Replicate.Models.Version.t(),
               input :: %{string: any},
               webhook :: list(String.t()),
               webhook_completed :: list(String.t()),
