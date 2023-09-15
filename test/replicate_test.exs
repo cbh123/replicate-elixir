@@ -3,7 +3,6 @@ defmodule ReplicateTest do
   import Mox
   alias Replicate.Predictions.Prediction
   alias Replicate.Models.Model
-  alias Replicate.Deployments.Deployment
   doctest Replicate
   doctest Replicate.Predictions
   doctest Replicate.Models
@@ -90,6 +89,6 @@ defmodule ReplicateTest do
         prompt: "a 19th century portrait of a wombat gentleman"
       })
 
-    prediction.status == "starting"
+    assert prediction.status == "starting"
   end
 end
