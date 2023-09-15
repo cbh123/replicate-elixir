@@ -3,9 +3,11 @@ defmodule ReplicateTest do
   import Mox
   alias Replicate.Predictions.Prediction
   alias Replicate.Models.Model
+  alias Replicate.Deployments.Deployment
   doctest Replicate
   doctest Replicate.Predictions
   doctest Replicate.Models
+  doctest Replicate.Deployments
 
   # Make sure mocks are verified when the test exits
   setup :verify_on_exit!
@@ -78,5 +80,9 @@ defmodule ReplicateTest do
     first_version = Enum.at(versions, 0)
     assert first_version.id == "v1"
     assert first_version.cog_version == "0.3.0"
+  end
+
+  test "create a deployment prediction" do
+    deployment = Replicate.Deployments.get("test/model")
   end
 end
