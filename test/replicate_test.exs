@@ -83,6 +83,21 @@ defmodule ReplicateTest do
   end
 
   test "create a deployment prediction" do
-    deployment = Replicate.Deployments.get("test/model")
+    {:ok, deployment} = Replicate.Deployments.get("test/model")
+
+    model = Replicate.Models.get!("stability-ai/stable-diffusion")
+
+    version =
+      Replicate.Models.get_version!(
+        model,
+        "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf"
+      )
+
+    {:ok, prediction} =
+      Replicate.Deployments.create_prediction(deployment, version, %{
+        prompt: "a 19th century portrait of a wombat gentleman"
+      })
+
+    prediction.status == "starting"
   end
 end
