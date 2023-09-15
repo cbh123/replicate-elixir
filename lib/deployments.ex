@@ -4,8 +4,8 @@ defmodule Replicate.Deployments do
   """
   @behaviour Replicate.Deployments.Behaviour
   @replicate_client Application.compile_env(:replicate, :replicate_client, Replicate.Client)
+
   alias Replicate.Deployments.Deployment
-  alias Replicate.Models.Version
   alias Replicate.Predictions.Prediction
 
   @doc """
