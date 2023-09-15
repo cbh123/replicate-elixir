@@ -34,8 +34,6 @@ defmodule Replicate.Deployments do
 
   ```
   iex> {:ok, deployment} = Replicate.Deployments.get("test/model")
-  iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
-  iex> version = Replicate.Models.get_version!(model, "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf")
   iex> {:ok, prediction} = Replicate.Deployments.create_prediction(deployment, version, %{prompt: "a 19th century portrait of a wombat gentleman"})
   iex> prediction.status
   "starting"
@@ -43,7 +41,6 @@ defmodule Replicate.Deployments do
   """
   def create_prediction(
         %Deployment{username: username, name: name},
-        %Version{id: version_id},
         input,
         webhook \\ nil,
         webhook_completed \\ nil,
@@ -62,7 +59,6 @@ defmodule Replicate.Deployments do
 
     body =
       %{
-        "version" => version_id,
         "input" => input |> Enum.into(%{})
       }
       |> Map.merge(webhook_parameters)
