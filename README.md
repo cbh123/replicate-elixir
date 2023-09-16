@@ -10,7 +10,7 @@ Install by adding `replicate` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:replicate, "~> 1.1.0"}
+    {:replicate, "~> 1.1.1"}
   ]
 end
 ```
@@ -217,6 +217,17 @@ iex> url
 iex> {:ok, resp} = :httpc.request(:get, {url, []}, [], [body_format: :binary])
 iex> {{_, 200, 'OK'}, _headers, body} = resp
 iex> File.write!("babadook_watercolor.jpg", body)
+```
+
+## Create prediction from deployment
+
+Deployments allow you to control the configuration of a model with a private, fixed API endpoint. You can control the version of the model, the hardware it runs on, and how it scales.
+
+Once you create a deployment on Replicate, you can make predictions like this:
+
+```elixir
+iex> {:ok, deployment} = Replicate.Deployments.get("test/model")
+iex> {:ok, prediction} = Replicate.Deployments.create_prediction(deployment, %{prompt: "a 19th century portrait of a wombat gentleman"})
 ```
 
 # replicate-elixir

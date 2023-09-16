@@ -14,7 +14,7 @@ defmodule Replicate.MockClient do
     ],
     urls: %{
       "get" => "https://api.replicate.com/v1/predictions/1234",
-      "cancel" => "https://api.replicate.com/v1/predictions/1234/cancel",
+      "cancel" => "https://api.replicate.com/v1/predictions/1234/cancel"
     }
   }
   @stub_prediction2 %{
@@ -27,7 +27,7 @@ defmodule Replicate.MockClient do
     ],
     urls: %{
       "get" => "https://api.replicate.com/v1/predictions/1235",
-      "cancel" => "https://api.replicate.com/v1/predictions/1235/cancel",
+      "cancel" => "https://api.replicate.com/v1/predictions/1235/cancel"
     }
   }
 

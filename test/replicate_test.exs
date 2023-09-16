@@ -6,6 +6,7 @@ defmodule ReplicateTest do
   doctest Replicate
   doctest Replicate.Predictions
   doctest Replicate.Models
+  doctest Replicate.Deployments
 
   # Make sure mocks are verified when the test exits
   setup :verify_on_exit!
@@ -78,5 +79,16 @@ defmodule ReplicateTest do
     first_version = Enum.at(versions, 0)
     assert first_version.id == "v1"
     assert first_version.cog_version == "0.3.0"
+  end
+
+  test "create a deployment prediction" do
+    {:ok, deployment} = Replicate.Deployments.get("test/model")
+
+    {:ok, prediction} =
+      Replicate.Deployments.create_prediction(deployment, %{
+        prompt: "a 19th century portrait of a wombat gentleman"
+      })
+
+    assert prediction.status == "starting"
   end
 end
