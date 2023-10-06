@@ -121,6 +121,33 @@ defmodule Replicate.Models do
     end
   end
 
+  @doc """
+  Get a paginated list of all public models.
+
+  ## Examples
+  iex> models = Replicate.Models.list()
+  """
+  def list() do
+    case @replicate_client.request(:get, "/v1/models") do
+      {:ok, response} ->
+        %{"results" => results, "next" => next, "previous" => previous} = Jason.decode!(response)
+
+        raise "add pagination https://github.com/replicate/replicate-javascript/blob/main/index.js#L230C6-L230C11"
+
+        models =
+          results
+          |> Enum.map(fn m ->
+            atom_map = string_to_atom(m)
+            struct!(Model, atom_map)
+          end)
+
+        %{next: next, previous: previous, results: models}
+
+      {:error, message} ->
+        raise message
+    end
+  end
+
   defp string_to_atom(body) do
     for {k, v} <- body, into: %{}, do: {String.to_atom(k), v}
   end
