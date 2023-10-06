@@ -6,6 +6,7 @@ defmodule ReplicateTest do
   doctest Replicate
   doctest Replicate.Predictions
   doctest Replicate.Models
+  doctest Replicate.Deployments
 
   # Make sure mocks are verified when the test exits
   setup :verify_on_exit!
@@ -24,11 +25,13 @@ defmodule ReplicateTest do
         prompt: "a 19th century portrait of a wombat gentleman"
       })
 
-    assert prediction.status == "starting"
-    assert prediction.input == %{"prompt" => "a 19th century portrait of a wombat gentleman"}
-
     assert prediction.version ==
              "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478"
+
+    assert prediction.status == "starting"
+    assert prediction.input == %{"prompt" => "a 19th century portrait of a wombat gentleman"}
+    assert prediction.urls["get"] == "https://api.replicate.com/v1/predictions/1234"
+    assert prediction.urls["cancel"] == "https://api.replicate.com/v1/predictions/1234/cancel"
   end
 
   test "create and wait prediction" do
@@ -76,5 +79,16 @@ defmodule ReplicateTest do
     first_version = Enum.at(versions, 0)
     assert first_version.id == "v1"
     assert first_version.cog_version == "0.3.0"
+  end
+
+  test "create a deployment prediction" do
+    {:ok, deployment} = Replicate.Deployments.get("test/model")
+
+    {:ok, prediction} =
+      Replicate.Deployments.create_prediction(deployment, %{
+        prompt: "a 19th century portrait of a wombat gentleman"
+      })
+
+    assert prediction.status == "starting"
   end
 end

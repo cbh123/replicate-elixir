@@ -5,6 +5,7 @@ defmodule Replicate.Client do
   @host Application.compile_env(:replicate, :replicate_base_url, "https://api.replicate.com")
   @behaviour Replicate.Client.Behaviour
   @poll_interval Application.compile_env(:replicate, :replicate_poll_interval, 500)
+  @timeout Application.compile_env(:replicate, :replicate_timeout, 60_000)
 
   alias Replicate.Predictions
   alias Replicate.Predictions.Prediction
@@ -21,7 +22,10 @@ defmodule Replicate.Client do
   def request(method, path), do: request(method, path, [])
 
   def request(method, path, body) do
-    case HTTPoison.request!(method, "#{@host}#{path}", body, header()) do
+    case HTTPoison.request!(method, "#{@host}#{path}", body, header(),
+           timeout: @timeout,
+           recv_timeout: @timeout
+         ) do
       %HTTPoison.Response{status_code: 200, body: body} ->
         {:ok, body}
 
