@@ -197,13 +197,47 @@ You can list all the versions of a model:
 
 Gets the latest version of a model. Raises an error if the version doesn't exist.
 
-```
+```elixir
 iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
 iex> version = Replicate.Models.get_latest_version!(model)
 iex> version.id
 "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf"
 iex> version.cog_version
 "0.6.0"
+```
+
+## List models
+
+Get a paginated list of all public models.
+
+```elixir
+iex> %{next: next, previous: previous, results: results} = Replicate.Models.list()
+iex> next
+"https://api.replicate.com/v1/trainings?cursor=cD0yMDIyLTAxLTIxKzIzJTNBMTglM0EyNC41MzAzNTclMkIwMCUzQTAw"
+iex> previous
+nil
+iex> results |> length()
+25
+iex> results |> Enum.at(0)
+%Replicate.Models.Model{
+    url: "https://replicate.com/replicate/hello-world",
+    owner: "replicate",
+    name: "hello-world",
+    description: "A tiny model that says hello",
+    visibility: "public",
+    github_url: "https://github.com/replicate/cog-examples",
+    paper_url: nil,
+    license_url: nil,
+    run_count: 12345,
+    cover_image_url: nil,
+    default_example: nil,
+    latest_version: %{
+    "cog_version" => "0.3.0",
+    "created_at" => "2022-03-21T13:01:04.418669Z",
+    "id" => "v2",
+    "openapi_schema" => %{}
+    }
+}
 ```
 
 ## Load output files
@@ -228,6 +262,21 @@ Once you create a deployment on Replicate, you can make predictions like this:
 ```elixir
 iex> {:ok, deployment} = Replicate.Deployments.get("test/model")
 iex> {:ok, prediction} = Replicate.Deployments.create_prediction(deployment, %{prompt: "a 19th century portrait of a wombat gentleman"})
+```
+
+
+## Paginate
+
+Paginates through results provided by the `endpoint_func` function. Returns a stream of results.
+
+```elixir
+iex> stream = Replicate.paginate(&Replicate.Models.list/0)
+iex> first_batch = stream |> Enum.at(0)
+iex> first_batch |> length()
+25
+iex> %Replicate.Models.Model{name: name} = first_batch |> Enum.at(0)
+iex> name
+"hello-world"
 ```
 
 # replicate-elixir
