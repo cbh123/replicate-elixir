@@ -10,7 +10,7 @@ Install by adding `replicate` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:replicate, "~> 1.1.1"}
+    {:replicate, "~> 1.1.2"}
   ]
 end
 ```
