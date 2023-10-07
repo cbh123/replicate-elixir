@@ -91,4 +91,42 @@ defmodule ReplicateTest do
 
     assert prediction.status == "starting"
   end
+
+  test "list models" do
+    %{next: next, previous: previous, results: results} = Replicate.Models.list()
+
+    assert next ==
+             "https://api.replicate.com/v1/trainings?cursor=cD0yMDIyLTAxLTIxKzIzJTNBMTglM0EyNC41MzAzNTclMkIwMCUzQTAw"
+
+    assert previous == nil
+    assert results |> length() == 25
+
+    assert results |> Enum.at(0) ==
+             %Replicate.Models.Model{
+               url: "https://replicate.com/replicate/hello-world",
+               owner: "replicate",
+               name: "hello-world",
+               description: "A tiny model that says hello",
+               visibility: "public",
+               github_url: "https://github.com/replicate/cog-examples",
+               paper_url: nil,
+               license_url: nil,
+               run_count: 12345,
+               cover_image_url: nil,
+               default_example: nil,
+               latest_version: %{
+                 "cog_version" => "0.3.0",
+                 "created_at" => "2022-03-21T13:01:04.418669Z",
+                 "id" => "v2",
+                 "openapi_schema" => %{}
+               }
+             }
+  end
+
+  test "paginate models" do
+    stream = Replicate.paginate(&Replicate.Models.list/0)
+    first_batch = stream |> Enum.at(0)
+
+    assert first_batch |> length() == 25
+  end
 end

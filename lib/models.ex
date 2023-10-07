@@ -125,14 +125,38 @@ defmodule Replicate.Models do
   Get a paginated list of all public models.
 
   ## Examples
-  iex> models = Replicate.Models.list()
+  iex> %{next: next, previous: previous, results: results} = Replicate.Models.list()
+  iex> next
+  "https://api.replicate.com/v1/trainings?cursor=cD0yMDIyLTAxLTIxKzIzJTNBMTglM0EyNC41MzAzNTclMkIwMCUzQTAw"
+  iex> previous
+  nil
+  iex> results |> length()
+  25
+  iex> results |> Enum.at(0)
+  %Replicate.Models.Model{
+      url: "https://replicate.com/replicate/hello-world",
+      owner: "replicate",
+      name: "hello-world",
+      description: "A tiny model that says hello",
+      visibility: "public",
+      github_url: "https://github.com/replicate/cog-examples",
+      paper_url: nil,
+      license_url: nil,
+      run_count: 12345,
+      cover_image_url: nil,
+      default_example: nil,
+      latest_version: %{
+        "cog_version" => "0.3.0",
+        "created_at" => "2022-03-21T13:01:04.418669Z",
+        "id" => "v2",
+        "openapi_schema" => %{}
+    }
+  }
   """
   def list() do
     case @replicate_client.request(:get, "/v1/models") do
       {:ok, response} ->
         %{"results" => results, "next" => next, "previous" => previous} = Jason.decode!(response)
-
-        raise "add pagination https://github.com/replicate/replicate-javascript/blob/main/index.js#L230C6-L230C11"
 
         models =
           results

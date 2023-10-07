@@ -104,6 +104,19 @@ defmodule Replicate.MockClient do
   def request(:get, "/v1/predictions/not_a_real_id"), do: {:error, "Not found"}
   def request(:get, "/v1/models/cbh123/babadook-diffusion"), do: {:error, "Not found"}
 
+  def request(:get, "/v1/models") do
+    models = Enum.map(1..25, fn _ -> @stub_model end)
+
+    {:ok,
+     %{
+       "results" => models,
+       "next" =>
+         "https://api.replicate.com/v1/trainings?cursor=cD0yMDIyLTAxLTIxKzIzJTNBMTglM0EyNC41MzAzNTclMkIwMCUzQTAw",
+       "previous" => nil
+     }
+     |> Jason.encode!()}
+  end
+
   def request(:get, path), do: {:error, "Unexpected path in the mock client: #{path}"}
 
   def request(:post, path), do: request(:post, path, [])

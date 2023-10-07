@@ -33,4 +33,32 @@ defmodule Replicate do
       {:error, message} -> {:error, message}
     end
   end
+
+  @doc """
+  Paginates through results provided by the `endpoint_func` function.
+  Returns a stream of results.
+
+  ## Examples
+  iex> stream = Replicate.paginate(&Replicate.Models.list/0)
+  iex> first_batch = stream |> Enum.at(0)
+  iex> first_batch |> length()
+  25
+  iex> %Replicate.Models.Model{name: name} = first_batch |> Enum.at(0)
+  iex> name
+  "hello-world"
+  """
+  def paginate(endpoint_func) when is_function(endpoint_func) do
+    Stream.resource(
+      fn -> endpoint_func.() end,
+      &fetch_next_page/1,
+      fn _ -> :ok end
+    )
+  end
+
+  defp fetch_next_page(%{next: nil} = response),
+    do: {[], response}
+
+  defp fetch_next_page(%{next: next} = response) when is_binary(next) do
+    {[response.results], response}
+  end
 end
