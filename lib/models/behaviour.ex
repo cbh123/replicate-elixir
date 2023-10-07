@@ -8,4 +8,9 @@ defmodule Replicate.Models.Behaviour do
               Replicate.Models.Version.t()
   @callback get_latest_version!(Replicate.Models.Model.t()) :: Replicate.Models.Version.t()
   @callback list_versions(Replicate.Models.Model.t()) :: [Replicate.Models.Version.t()]
+  @callback list() :: %{
+              results: [Replicate.Models.Model.t()],
+              next: String.t(),
+              previous: String.t()
+            }
 end

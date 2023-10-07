@@ -121,6 +121,57 @@ defmodule Replicate.Models do
     end
   end
 
+  @doc """
+  Get a paginated list of all public models.
+
+  ## Examples
+  iex> %{next: next, previous: previous, results: results} = Replicate.Models.list()
+  iex> next
+  "https://api.replicate.com/v1/trainings?cursor=cD0yMDIyLTAxLTIxKzIzJTNBMTglM0EyNC41MzAzNTclMkIwMCUzQTAw"
+  iex> previous
+  nil
+  iex> results |> length()
+  25
+  iex> results |> Enum.at(0)
+  %Replicate.Models.Model{
+      url: "https://replicate.com/replicate/hello-world",
+      owner: "replicate",
+      name: "hello-world",
+      description: "A tiny model that says hello",
+      visibility: "public",
+      github_url: "https://github.com/replicate/cog-examples",
+      paper_url: nil,
+      license_url: nil,
+      run_count: 12345,
+      cover_image_url: nil,
+      default_example: nil,
+      latest_version: %{
+        "cog_version" => "0.3.0",
+        "created_at" => "2022-03-21T13:01:04.418669Z",
+        "id" => "v2",
+        "openapi_schema" => %{}
+    }
+  }
+  """
+  def list() do
+    case @replicate_client.request(:get, "/v1/models") do
+      {:ok, response} ->
+        %{"results" => results, "next" => next, "previous" => previous} = Jason.decode!(response)
+
+        models =
+          results
+          |> Enum.map(fn m ->
+            atom_map = string_to_atom(m)
+            struct!(Model, atom_map)
+          end)
+
+        %{next: next, previous: previous, results: models}
+
+      {:error, message} ->
+        raise message
+    end
+  end
+
   defp string_to_atom(body) do
     for {k, v} <- body, into: %{}, do: {String.to_atom(k), v}
   end
