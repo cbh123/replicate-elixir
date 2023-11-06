@@ -222,6 +222,7 @@ defmodule Replicate.Models do
           "license_url" => license_url,
           "cover_image_url" => cover_image_url
         }
+        |> Jason.encode!()
 
       case @replicate_client.request(:post, "/v1/models", body) do
         {:ok, result} ->
@@ -232,7 +233,8 @@ defmodule Replicate.Models do
           {:error, message}
       end
     else
-      :error -> {:error, "A required parameter (owner/name/visiblity/hardware) is missing"}
+      :error ->
+        {:error, "A required parameter (owner/name/visiblity/hardware) is missing"}
     end
   end
 
