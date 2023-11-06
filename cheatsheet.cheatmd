@@ -47,6 +47,21 @@ You can run a model and get a webhook when it completes, instead of waiting for 
 Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"}, "https://example.com/webhook", ["completed"])
 ```
 
+### Create a model
+
+You can create a model for a user or organization
+with a given name, visibility, and hardware SKU. To see a list of available hardware SKUs, run `Replicate.Hardware.list/0`.
+
+```elixir
+iex> {:ok, model} =
+        Replicate.Models.create(
+        owner: "your-username",
+        name: "my-model",
+        visibility: "public",
+        hardware: "gpu-a40-large"
+        )
+```
+
 ### List versions of a model
 
 You can list all the versions of a model:

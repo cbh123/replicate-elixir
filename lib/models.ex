@@ -172,6 +172,72 @@ defmodule Replicate.Models do
     end
   end
 
+  @doc """
+  Create a model.
+
+  Args:
+    owner: The name of the user or organization that will own the model.
+    name: The name of the model.
+    visibility: Whether the model should be public or private.
+    hardware: The SKU for the hardware used to run the model. Possible values can be found by calling `Replicate.Hardware.list()`.
+    description: A description of the model.
+    github_url: A URL for the model's source code on GitHub.
+    paper_url: A URL for the model's paper.
+    license_url: A URL for the model's license.
+    cover_image_url: A URL for the model's cover image.
+
+
+  Returns {:ok, %Replicate.Models.Model{}} or {:error, message}.
+
+  ## Examples
+  iex> {:ok, model} = Replicate.Models.create(
+  ...>   owner: "replicate",
+  ...>   name: "hello-world",
+  ...>   visibility: "public",
+  ...>   hardware: "gpu-a40-large"
+  ...> )
+  iex> model.owner
+  "replicate"
+  """
+  def create(opts) do
+    with {:ok, owner} <- Keyword.fetch(opts, :owner),
+         {:ok, name} <- Keyword.fetch(opts, :name),
+         {:ok, visibility} <- Keyword.fetch(opts, :visibility),
+         {:ok, hardware} <- Keyword.fetch(opts, :hardware) do
+      description = Keyword.get(opts, :description, nil)
+      github_url = Keyword.get(opts, :github_url, nil)
+      paper_url = Keyword.get(opts, :paper_url, nil)
+      license_url = Keyword.get(opts, :license_url, nil)
+      cover_image_url = Keyword.get(opts, :cover_image_url, nil)
+
+      body =
+        %{
+          "owner" => owner,
+          "name" => name,
+          "visibility" => visibility,
+          "hardware" => hardware,
+          "description" => description,
+          "github_url" => github_url,
+          "paper_url" => paper_url,
+          "license_url" => license_url,
+          "cover_image_url" => cover_image_url
+        }
+        |> Jason.encode!()
+
+      case @replicate_client.request(:post, "/v1/models", body) do
+        {:ok, result} ->
+          model = Jason.decode!(result) |> string_to_atom()
+          {:ok, struct(Model, model)}
+
+        {:error, message} ->
+          {:error, message}
+      end
+    else
+      :error ->
+        {:error, "A required parameter (owner/name/visiblity/hardware) is missing"}
+    end
+  end
+
   defp string_to_atom(body) do
     for {k, v} <- body, into: %{}, do: {String.to_atom(k), v}
   end

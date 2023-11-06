@@ -10,12 +10,13 @@ Install by adding `replicate` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:replicate, "~> 1.1.2"}
+    {:replicate, "~> 1.2.0"}
   ]
 end
 ```
 
 ## Demo
+
 Want to jump right in to building your own apps with Elixir and Replicate? Check out 🔮 [Conjurer](https://github.com/cbh123/getting-started-with-replicate-elixir/blob/main/README.md), a simple demo app we built with the Elixir client.
 
 <video width="400" controls>
@@ -251,6 +252,21 @@ iex> url
 iex> {:ok, resp} = :httpc.request(:get, {url, []}, [], [body_format: :binary])
 iex> {{_, 200, 'OK'}, _headers, body} = resp
 iex> File.write!("babadook_watercolor.jpg", body)
+```
+
+## Create a model
+
+You can create a model for a user or organization
+with a given name, visibility, and hardware SKU:
+
+```elixir
+iex> {:ok, model} =
+        Replicate.Models.create(
+        owner: "your-username",
+        name: "my-model",
+        visibility: "public",
+        hardware: "gpu-a40-large"
+        )
 ```
 
 ## Create prediction from deployment
