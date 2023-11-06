@@ -133,7 +133,7 @@ defmodule Replicate.MockClient do
   def request(:post, path), do: request(:post, path, [])
 
   def request(:post, "/v1/models", body) do
-    {:ok, body |> Jason.encode!()}
+    {:ok, body}
   end
 
   def request(:post, path, _body) do
