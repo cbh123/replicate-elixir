@@ -253,6 +253,21 @@ iex> {{_, 200, 'OK'}, _headers, body} = resp
 iex> File.write!("babadook_watercolor.jpg", body)
 ```
 
+## Create a model
+
+You can create a model for a user or organization
+with a given name, visibility, and hardware SKU:
+
+```elixir
+iex> {:ok, model} =
+        Replicate.Models.create(
+        owner: "your-username",
+        name: "my-model",
+        visibility: "public",
+        hardware: "gpu-a40-large"
+        )
+```
+
 ## Create prediction from deployment
 
 Deployments allow you to control the configuration of a model with a private, fixed API endpoint. You can control the version of the model, the hardware it runs on, and how it scales.
