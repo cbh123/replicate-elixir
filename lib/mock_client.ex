@@ -59,6 +59,13 @@ defmodule Replicate.MockClient do
     "latest_version" => @stub_version2
   }
 
+  @stub_hardware [
+    %{"name" => "CPU", "sku" => "cpu"},
+    %{"name" => "Nvidia T4 GPU", "sku" => "gpu-t4"},
+    %{"name" => "Nvidia A40 GPU", "sku" => "gpu-a40-small"},
+    %{"name" => "Nvidia A40 (Large) GPU", "sku" => "gpu-a40-large"}
+  ]
+
   def request(:get, "/v1/predictions") do
     {:ok, %{"results" => [@stub_prediction, @stub_prediction2]} |> Jason.encode!()}
   end
@@ -115,6 +122,10 @@ defmodule Replicate.MockClient do
        "previous" => nil
      }
      |> Jason.encode!()}
+  end
+
+  def request(:get, "/v1/hardware") do
+    {:ok, @stub_hardware |> Jason.encode!()}
   end
 
   def request(:get, path), do: {:error, "Unexpected path in the mock client: #{path}"}

@@ -3,10 +3,12 @@ defmodule ReplicateTest do
   import Mox
   alias Replicate.Predictions.Prediction
   alias Replicate.Models.Model
+  alias Replicate.Hardware.Hardware
   doctest Replicate
   doctest Replicate.Predictions
   doctest Replicate.Models
   doctest Replicate.Deployments
+  doctest Replicate.Hardware
 
   # Make sure mocks are verified when the test exits
   setup :verify_on_exit!
@@ -150,5 +152,12 @@ defmodule ReplicateTest do
       )
 
     assert message == "A required parameter (owner/name/visiblity/hardware) is missing"
+  end
+
+  test "list hardware" do
+    hardware = Replicate.Hardware.list()
+
+    assert hardware |> length() == 4
+    assert hardware |> Enum.at(0) == %Hardware{name: "CPU", sku: "cpu"}
   end
 end
