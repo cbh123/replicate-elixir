@@ -121,6 +121,10 @@ defmodule Replicate.MockClient do
 
   def request(:post, path), do: request(:post, path, [])
 
+  def request(:post, "/v1/models", body) do
+    {:ok, body |> Jason.encode!()}
+  end
+
   def request(:post, path, _body) do
     if Path.basename(path) == "cancel" do
       {:ok, %{@stub_prediction | status: "canceled"} |> Jason.encode!()}

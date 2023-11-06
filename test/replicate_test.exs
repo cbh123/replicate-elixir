@@ -129,4 +129,16 @@ defmodule ReplicateTest do
 
     assert first_batch |> length() == 25
   end
+
+  test "create a model" do
+    {:ok, model} =
+      Replicate.Models.create(
+        owner: "replicate",
+        name: "hello-world",
+        visibility: "public",
+        hardware: "gpu-a40-large"
+      )
+
+    assert model.owner == "replicate"
+  end
 end
