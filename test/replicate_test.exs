@@ -134,11 +134,13 @@ defmodule ReplicateTest do
     {:ok, model} =
       Replicate.Models.create(
         owner: "replicate",
-        name: "hello-world",
+        name: "babadook",
         visibility: "public",
         hardware: "gpu-a40-large"
       )
 
     assert model.owner == "replicate"
+    assert model.name == "babadook"
+    assert model.visibility == "public"
   end
 end
