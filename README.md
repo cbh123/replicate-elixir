@@ -16,6 +16,7 @@ end
 ```
 
 ## Demo
+
 Want to jump right in to building your own apps with Elixir and Replicate? Check out 🔮 [Conjurer](https://github.com/cbh123/getting-started-with-replicate-elixir/blob/main/README.md), a simple demo app we built with the Elixir client.
 
 <video width="400" controls>
