@@ -142,5 +142,13 @@ defmodule ReplicateTest do
     assert model.owner == "replicate"
     assert model.name == "babadook"
     assert model.visibility == "public"
+
+    {:error, message} =
+      Replicate.Models.create(
+        owner: "replicate",
+        name: "babadook"
+      )
+
+    assert message == "A required parameter (owner/name/visiblity/hardware) is missing"
   end
 end
