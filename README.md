@@ -1,3 +1,6 @@
+> **Important**
+> [Help us make Replicate better by taking part in user research](https://forms.gle/qUVQ84mjiqzwzSb48)
+
 # Replicate
 
 The official Elixir client for [Replicate](https://replicate.com). It lets you run models from your Elixir code, and everything else you can do with Replicate's HTTP API.
