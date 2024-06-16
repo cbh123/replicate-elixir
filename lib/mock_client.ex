@@ -56,7 +56,8 @@ defmodule Replicate.MockClient do
     "license_url" => nil,
     "run_count" => 12345,
     "cover_image_url" => nil,
-    "latest_version" => @stub_version2
+    "latest_version" => @stub_version2,
+    "created_at" => "2022-04-26T19:29:04.418669Z"
   }
 
   @stub_hardware [

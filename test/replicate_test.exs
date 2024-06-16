@@ -116,6 +116,7 @@ defmodule ReplicateTest do
                run_count: 12345,
                cover_image_url: nil,
                default_example: nil,
+               created_at: "2022-04-26T19:29:04.418669Z",
                latest_version: %{
                  "cog_version" => "0.3.0",
                  "created_at" => "2022-03-21T13:01:04.418669Z",
