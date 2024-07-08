@@ -13,13 +13,4 @@ defmodule Replicate.Models.Behaviour do
               next: String.t(),
               previous: String.t()
             }
-  @callback create(
-              owner :: String.t(),
-              name :: String.t(),
-              description :: String.t(),
-              github_url :: String.t(),
-              paper_url :: String.t(),
-              license_url :: String.t(),
-              cover_image_url :: String.t()
-            ) :: {:ok, Replicate.Models.Model.t()} | {:error, String.t()}
 end

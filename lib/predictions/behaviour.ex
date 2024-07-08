@@ -12,7 +12,14 @@ defmodule Replicate.Predictions.Behaviour do
   @callback list :: list(Prediction.t())
   @callback create(
               version :: Replicate.Models.Version.t(),
-              input :: %{string: any},
+              input :: %{String.t() => any()},
+              webhook :: list(String.t()),
+              webhook_completed :: list(String.t()),
+              webook_event_filter :: list(String.t())
+            ) :: {:ok, Prediction.t()} | {:error, String.t()}
+  @callback create(
+              model :: String.t(),
+              input :: %{String.t() => any()},
               webhook :: list(String.t()),
               webhook_completed :: list(String.t()),
               webook_event_filter :: list(String.t())

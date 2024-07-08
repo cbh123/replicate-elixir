@@ -96,6 +96,13 @@ defmodule Replicate.Predictions do
 
   ## Examples
 
+  If you're calling an Official Model, you can provide the model name and version:
+  ```
+  iex> {:ok, prediction} = Replicate.Predictions.create("stability-ai/stable-diffusion-3", %{prompt: "a 19th century portrait of a wombat gentleman"})
+  iex> prediction.status
+  "starting"
+
+  Otherwise, provide a `%Replicate.Models.Version{}` struct:
   ```
   iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
   iex> version = Replicate.Models.get_version!(model, "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf")
@@ -108,7 +115,7 @@ defmodule Replicate.Predictions do
   ```
   """
   def create(
-        %Version{id: id},
+        model,
         input,
         webhook \\ nil,
         webhook_completed \\ nil,
@@ -125,6 +132,10 @@ defmodule Replicate.Predictions do
       |> Enum.filter(fn {_key, value} -> !is_nil(value) end)
       |> Enum.into(%{})
 
+    send_to_replicate(model, input, webhook_parameters)
+  end
+
+  defp send_to_replicate(%Version{id: id}, input, webhook_parameters) do
     body =
       %{
         "version" => id,
@@ -134,6 +145,20 @@ defmodule Replicate.Predictions do
       |> Jason.encode!()
 
     @replicate_client.request(:post, "/v1/predictions", body)
+    |> parse_response()
+  end
+
+  defp send_to_replicate(model, input, webhook_parameters) do
+    [model_owner, model_name] = String.split(model, "/")
+
+    body =
+      %{
+        "input" => input |> Enum.into(%{})
+      }
+      |> Map.merge(webhook_parameters)
+      |> Jason.encode!()
+
+    @replicate_client.request(:post, "/v1/models/#{model_owner}/#{model_name}/predictions", body)
     |> parse_response()
   end
 

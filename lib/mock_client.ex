@@ -136,6 +136,19 @@ defmodule Replicate.MockClient do
     {:ok, body}
   end
 
+  # official models endpoint
+  def request(:post, "/v1/models/replicate/hello-world/predictions", _body) do
+    {:ok, @stub_prediction |> Jason.encode!()}
+  end
+
+  def request(:post, "/v1/predictions", body) do
+    if "version" not in (body |> Jason.decode!() |> Map.keys()) do
+      {:error, "Version is required"}
+    else
+      {:ok, @stub_prediction |> Jason.encode!()}
+    end
+  end
+
   def request(:post, path, _body) do
     if Path.basename(path) == "cancel" do
       {:ok, %{@stub_prediction | status: "canceled"} |> Jason.encode!()}
