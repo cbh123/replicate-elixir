@@ -1,4 +1,4 @@
-## [2024-05-22]
+## [2024-07-08]
 
 - Support for official models. Run any model now with:
 

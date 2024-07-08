@@ -2,7 +2,6 @@
 
 The official Elixir client for [Replicate](https://replicate.com). It lets you run models from your Elixir code, and everything else you can do with Replicate's HTTP API.
 
-
 ## Installation
 
 Install by adding `replicate` to your list of dependencies in `mix.exs`:
@@ -10,7 +9,7 @@ Install by adding `replicate` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:replicate, "~> 1.2.0"}
+    {:replicate, "~> 1.3.0"}
   ]
 end
 ```
@@ -23,7 +22,6 @@ Want to jump right in to building your own apps with Elixir and Replicate? Check
   <source src="https://user-images.githubusercontent.com/14149230/242976273-dba6b2a0-71f1-4838-bf97-6937e3211efe.mp4" type="video/mp4">
 </video>
 
-
 ## Authenticate
 
 After installation, you need to set your Replicate API token in your environment.
@@ -35,7 +33,6 @@ export REPLICATE_API_TOKEN=<your token>
 ```
 
 And run `source .env`.
-
 
 Then, add the config to your `config.exs`:
 
@@ -61,6 +58,7 @@ iex> Replicate.run("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a2397
 ## Run a model in the background
 
 You can start a model and run it in the background with `Replicate.Predictions.create/5`:
+
 ```elixir
   iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
   iex> version = Replicate.Models.get_version!(model, "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf")
@@ -70,6 +68,7 @@ You can start a model and run it in the background with `Replicate.Predictions.c
 ```
 
 We can take a look at the prediction:
+
 ```elixir
   iex> prediction
   %Replicate.Predictions.Prediction{
@@ -87,6 +86,7 @@ We can take a look at the prediction:
 ```
 
 Get the latest status of the prediction with `Replicate.Predictions.get/1`:
+
 ```elixir
   iex> {:ok, prediction} = Replicate.Predictions.get(prediction.id)
   iex> prediction.logs |> String.split("\n")
@@ -113,6 +113,7 @@ Get the latest status of the prediction with `Replicate.Predictions.get/1`:
 ```
 
 And wait for completion with `Replicate.Predictions.wait/1`:
+
 ```elixir
   iex> {:ok, prediction} = Replicate.Predictions.wait(prediction)
   iex> prediction.status
@@ -130,7 +131,6 @@ Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wo
 ```
 
 If you want to see a demo of how to use webhooks in production, check out 🔮 [Conjurer](https://github.com/cbh123/getting-started-with-replicate-elixir/blob/main/README.md).
-
 
 ## Cancel a prediction
 
@@ -194,7 +194,7 @@ You can list all the versions of a model:
 
 ## Get latest version of a model
 
-*ELIXIR CLIENT EXCLUSIVE*
+_ELIXIR CLIENT EXCLUSIVE_
 
 Gets the latest version of a model. Raises an error if the version doesn't exist.
 
@@ -279,7 +279,6 @@ Once you create a deployment on Replicate, you can make predictions like this:
 iex> {:ok, deployment} = Replicate.Deployments.get("test/model")
 iex> {:ok, prediction} = Replicate.Deployments.create_prediction(deployment, %{prompt: "a 19th century portrait of a wombat gentleman"})
 ```
-
 
 ## Paginate
 
