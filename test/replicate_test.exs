@@ -13,6 +13,18 @@ defmodule ReplicateTest do
   # Make sure mocks are verified when the test exits
   setup :verify_on_exit!
 
+  # test "create prediction using an official model" do
+  #   {:ok, prediction} =
+  #     Replicate.Predictions.create("stability-ai/stable-diffusion-3", %{
+  #       prompt: "a 19th century portrait of a wombat gentleman"
+  #     })
+
+  #   assert prediction.status == "starting"
+  #   assert prediction.input == %{"prompt" => "a 19th century portrait of a wombat gentleman"}
+  #   assert prediction.urls["get"] == "https://api.replicate.com/v1/predictions/1234"
+  #   assert prediction.urls["cancel"] == "https://api.replicate.com/v1/predictions/1234/cancel"
+  # end
+
   test "create prediction" do
     model = Replicate.Models.get!("stability-ai/stable-diffusion")
 
