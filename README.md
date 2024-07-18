@@ -1,6 +1,9 @@
 # Replicate
 
-The official Elixir client for [Replicate](https://replicate.com). It lets you run models from your Elixir code, and everything else you can do with Replicate's HTTP API.
+An Elixir client for [Replicate](https://replicate.com).
+It lets you run models from your Elixir code,
+and everything else you can do with
+[Replicate's HTTP API](https://replicate.com/docs/reference/http).
 
 ## Installation
 
@@ -16,7 +19,9 @@ end
 
 ## Demo
 
-Want to jump right in to building your own apps with Elixir and Replicate? Check out 🔮 [Conjurer](https://github.com/cbh123/getting-started-with-replicate-elixir/blob/main/README.md), a simple demo app we built with the Elixir client.
+Want to jump right in to building your own apps with Elixir and Replicate?
+Check out 🔮 [Conjurer](https://github.com/cbh123/getting-started-with-replicate-elixir/blob/main/README.md),
+a simple demo app we built with the Elixir client.
 
 <video width="400" controls>
   <source src="https://user-images.githubusercontent.com/14149230/242976273-dba6b2a0-71f1-4838-bf97-6937e3211efe.mp4" type="video/mp4">
@@ -26,7 +31,8 @@ Want to jump right in to building your own apps with Elixir and Replicate? Check
 
 After installation, you need to set your Replicate API token in your environment.
 
-Grab your token from [replicate.com/account](https://replicate.com/account) and set it as an environment variable:
+Grab your token from [replicate.com/account](https://replicate.com/account)
+and set it as an environment variable:
 
 ```
 export REPLICATE_API_TOKEN=<your token>
@@ -44,7 +50,9 @@ config :replicate,
 
 Now you can use `Replicate` to do cool machine learny stuff.
 
-> 🚨 We recommend not adding the token directly to your source code, because you don't want to put your credentials in source control. If anyone used your API key, their usage would be charged to your account.
+> 🚨 We recommend not adding the token directly to your source code,
+> because you don't want to put your credentials in source control.
+> If anyone used your API key, their usage would be charged to your account.
 
 ## Run a model
 
@@ -144,19 +152,22 @@ And wait for completion with `Replicate.Predictions.wait/1`:
 
 ## Run a model in the background and get a webhook
 
-You can run a model and get a webhook when it completes, instead of waiting for it to finish:
+You can run a model and get a webhook when it completes,
+instead of waiting for it to finish:
 
-```
+```elixir
 Replicate.Predictions.create(version, %{prompt: "a 19th century portrait of a wombat gentleman"}, "https://example.com/webhook", ["completed"])
 ```
 
-If you want to see a demo of how to use webhooks in production, check out 🔮 [Conjurer](https://github.com/cbh123/getting-started-with-replicate-elixir/blob/main/README.md).
+If you want to see a demo of how to use webhooks in production,
+check out 🔮 [Conjurer](https://github.com/cbh123/getting-started-with-replicate-elixir/blob/main/README.md).
 
 ## Cancel a prediction
 
-You can cancel a running prediction by passing an id or `%Replicate.Predictions.Prediction{}` to `Replicate.Predictions.cancel/1`:
+You can cancel a running prediction by passing an id or
+`%Replicate.Predictions.Prediction{}` to `Replicate.Predictions.cancel/1`:
 
-```
+```elixir
   iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
   iex> version = Replicate.Models.get_version!(model, "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf")
   iex> {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: "Watercolor painting of the Babadook"})
@@ -212,21 +223,6 @@ You can list all the versions of a model:
     "8abccf52e7cba9f6e82317253f4a3549082e966db5584e92c808ece132037776"]
 ```
 
-## Get latest version of a model
-
-_ELIXIR CLIENT EXCLUSIVE_
-
-Gets the latest version of a model. Raises an error if the version doesn't exist.
-
-```elixir
-iex> model = Replicate.Models.get!("stability-ai/stable-diffusion")
-iex> version = Replicate.Models.get_latest_version!(model)
-iex> version.id
-"db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf"
-iex> version.cog_version
-"0.6.0"
-```
-
 ## List models
 
 Get a paginated list of all public models.
@@ -263,7 +259,8 @@ iex> results |> Enum.at(0)
 
 ## Load output files
 
-Output files are returned as HTTPS URLs. Here's one way to load files without any dependencies:
+Output files are returned as HTTPS URLs.
+Here's one way to load files without any dependencies:
 
 ```elixir
 iex> [url | _rest] = Replicate.run("stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", prompt: "a watercolor of the babadook by Picasso")
@@ -291,7 +288,9 @@ iex> {:ok, model} =
 
 ## Create prediction from deployment
 
-Deployments allow you to control the configuration of a model with a private, fixed API endpoint. You can control the version of the model, the hardware it runs on, and how it scales.
+Deployments allow you to control the configuration of a model
+with a private, fixed API endpoint.
+You can control the version of the model, the hardware it runs on, and how it scales.
 
 Once you create a deployment on Replicate, you can make predictions like this:
 
@@ -302,7 +301,8 @@ iex> {:ok, prediction} = Replicate.Deployments.create_prediction(deployment, %{p
 
 ## Paginate
 
-Paginates through results provided by the `endpoint_func` function. Returns a stream of results.
+Paginates through results provided by the `endpoint_func` function.
+Returns a stream of results.
 
 ```elixir
 iex> stream = Replicate.paginate(&Replicate.Models.list/0)
@@ -313,5 +313,3 @@ iex> %Replicate.Models.Model{name: name} = first_batch |> Enum.at(0)
 iex> name
 "hello-world"
 ```
-
-# replicate-elixir
