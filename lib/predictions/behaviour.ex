@@ -15,13 +15,13 @@ defmodule Replicate.Predictions.Behaviour do
               input :: %{String.t() => any()},
               webhook :: list(String.t()),
               webhook_completed :: list(String.t()),
-              webook_event_filter :: list(String.t())
+              webook_evenst_filter :: list(String.t())
             ) :: {:ok, Prediction.t()} | {:error, String.t()}
   @callback create(
               model :: String.t(),
               input :: %{String.t() => any()},
               webhook :: list(String.t()),
               webhook_completed :: list(String.t()),
-              webook_event_filter :: list(String.t())
+              webook_events_filter :: list(String.t())
             ) :: {:ok, Prediction.t()} | {:error, String.t()}
 end
